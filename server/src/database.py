@@ -30,8 +30,8 @@ class DatabaseIterator:
 class Document:
     def __init__(self) -> None:
         self.title = ''
-        self.abstract = ''
+        self.text = ''
         self.author = ''
 
     def __repr__(self) -> str:
-        return f'{self.title} {self.abstract} {self.author}'
+        return f'{self.title} {self.text} {self.author}'

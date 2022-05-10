@@ -1,11 +1,9 @@
-from concurrent.futures import process
-from pydoc import doc
 import re
 from typing import List
-from database import Document
+from .database import Document
 
 
-class CransfieldParser:
+class CranfieldParser:
     def __init__(self) -> None:
         pass
 
@@ -21,7 +19,7 @@ class CransfieldParser:
         lines: List[str] = document.split('\n')
         lines = list(map(lambda x: x.strip(), lines))
         separators: List[(int, str)] = []
-        for separator in ['.T', '.A', '.B', '.W', '.X']:
+        for separator in ['.T', '.A', '.B', '.W']:
             try:
                 index = lines.index(separator)
                 separators.append((index, separator))
@@ -42,7 +40,7 @@ class CransfieldParser:
             if separator == '.T':
                 document.title = data
             elif separator == '.W':
-                document.abstract = data
+                document.text = data
             elif separator == '.A':
                 document.author = data
         return document
