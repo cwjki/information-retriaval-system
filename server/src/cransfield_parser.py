@@ -1,27 +1,48 @@
+from concurrent.futures import process
+from pydoc import doc
 import re
-
+from typing import List
+from database import Document
 
 
 class CransfieldParser:
+    def __init__(self) -> None:
+        pass
 
-    def parse(file):
+    def parse(self, file):
         with open(file, 'r') as f:
             data = ''.join(f.readlines())
-        documents = re.split('.I \d', data)
+        documents: List[str] = re.split('.I \d', data)
         documents = [document.strip() for document in documents]
         documents = [document for document in documents if not document == '']
-    
-    def __parse_document(document):
-        lines = document.split('\n')
+        return [self.process_document(document for document in documents)]
+
+    def process_document(self, document):
+        lines: List[str] = document.split('\n')
         lines = list(map(lambda x: x.strip(), lines))
-        separators = []
+        separators: List[(int, str)] = []
         for separator in ['.T', '.A', '.B', '.W', '.X']:
             try:
                 index = lines.index(separator)
                 separators.append((index, separator))
             except ValueError:
                 pass
+        return self.create_document(lines, separators)
 
-    def __create_document(lines, separators):
-        
-        
+    def create_document(self, lines: List[str], separators):
+        document: Document = Document()
+        sections = sorted(separators)
+        sections.append((len(lines)), '')
+        for i, (index, separator) in enumerate(sections):
+            if separator == '':
+                break
+            begin = index + 1
+            end = sections[i+1][0]
+            data = ''.join(lines[begin: end])
+            if separator == '.T':
+                document.title = data
+            elif separator == '.W':
+                document.abstract = data
+            elif separator == '.A':
+                document.author = data
+        return document
