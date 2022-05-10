@@ -17,18 +17,21 @@ class Database:
 
 class DatabaseIterator:
     def __init__(self, database: Database) -> None:
-        self.__index: int
+        self.__index: int = -1
         self.__database: Database = database
 
     def __next__(self) -> str:
+        self.__index += 1
         if self.__index == len(self.__database):
             raise StopIteration
-        self.__index += 1
         return self.__database[self.__index]
 
 
 class Document:
-    def __init__(self, title: str, text: str, author: str) -> None:
-        self.title = title
-        self.text = text
-        self.author = author
+    def __init__(self) -> None:
+        self.title = ''
+        self.abstract = ''
+        self.author = ''
+
+    def __repr__(self) -> str:
+        return f'{self.title} {self.abstract} {self.author}'
