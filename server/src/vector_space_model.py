@@ -1,7 +1,11 @@
 from cmath import log
+from typing import Counter
+from server.src.preprocess_document import preprocces_document
 from src.inverted_index import InvertedIndex
 from src.dataset import Dataset
 from math import log10
+
+ALPHA = 0.4
 
 
 class VectorSpaceModel:
@@ -26,4 +30,23 @@ class VectorSpaceModel:
         idf = self.compute_idf(term)
         return tf * idf
 
-    
+    def compute_query_weight(self, term: str, frequency: float, max_frequency: float) -> float:
+        tf = (ALPHA + (1 - ALPHA) * frequency) / max_frequency
+        idf = self.compute_idf(term)
+        return tf * idf
+
+    def generate_document_vector(self, document_index: int):
+        document = self.dataset[document_index]
+        terms = preprocces_document(document.text)
+        return {term: self.compute_wight(document_index, term) for term in terms}
+
+    def generate_query_vector(self, query: str):
+        terms = preprocces_document(query)
+        query_frequency = Counter(terms)
+        max_frequecy = max(query_frequency.values())
+        result = {term: self.compute_query_weight(
+            term, query_frequency[term], max_frequecy) for term in terms}
+        return result
+
+    def compute_similarity(self, document_vector, query_vector) -> float:
+        
