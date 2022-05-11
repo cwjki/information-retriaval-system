@@ -5,6 +5,7 @@ from src.preprocess_document import preprocces_document
 
 class InvertedIndex:
     def __init__(self, dataset: Dataset) -> None:
+        self.dataset = dataset
         self.index: Dict[str, List[DocumentTerm]] = {}
         self.max_term_frequency_document: Dict[int, int] = [
             0 for _ in range(len(dataset))]
@@ -35,6 +36,18 @@ class InvertedIndex:
             documents = [DocumentTerm(document_index)]
             self.index[term] = documents
             return 1
+
+    def get_term_frequency_document(self, document_index, term) -> int:
+        return self.index[term][document_index]
+
+    def get_max_term_frequency_document(self, document_index) -> int:
+        return self.max_term_frequency_document[document_index]
+
+    def get_amount_document_with_term(self, term) -> int:
+        return len(self.index[term])
+
+    def get_total_document(self) -> int:
+        return len(self.dataset)
 
 
 class DocumentTerm:
