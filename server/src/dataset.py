@@ -1,7 +1,8 @@
 from typing import List
 
 
-class Database:
+
+class Dataset:
     def __init__(self, documents: List[str]) -> None:
         self.documents = documents
 
@@ -11,20 +12,20 @@ class Database:
     def __getitem__(self, index) -> str:
         return self.documents[index]
 
-    def __iter__(self) -> 'DatabaseIterator':
-        return DatabaseIterator(self)
+    def __iter__(self) -> 'DatasetIterator':
+        return DatasetIterator(self)
 
 
-class DatabaseIterator:
-    def __init__(self, database: Database) -> None:
-        self.__index: int = -1
-        self.__database: Database = database
+class DatasetIterator:
+    def __init__(self, dataset: Dataset) -> None:
+        self.index: int = -1
+        self.dataset: Dataset = dataset
 
     def __next__(self) -> str:
-        self.__index += 1
-        if self.__index == len(self.__database):
+        self.index += 1
+        if self.index == len(self.dataset):
             raise StopIteration
-        return self.__database[self.__index]
+        return self.dataset[self.index]
 
 
 class Document:

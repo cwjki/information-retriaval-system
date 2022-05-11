@@ -1,6 +1,6 @@
 import re
 from typing import List
-from .database import Document
+from .dataset import Document
 
 
 class CranfieldParser:
