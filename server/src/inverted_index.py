@@ -37,16 +37,16 @@ class InvertedIndex:
             self.index[term] = documents
             return 1
 
-    def get_term_frequency_document(self, document_index, term) -> int:
+    def get_term_frequency_document(self, document_index: int, term: str) -> int:
         return self.index[term][document_index]
 
-    def get_max_term_frequency_document(self, document_index) -> int:
+    def get_max_term_frequency_document(self, document_index: int) -> int:
         return self.max_term_frequency_document[document_index]
 
-    def get_amount_document_with_term(self, term) -> int:
+    def get_amount_document_with_term(self, term: str) -> int:
         return len(self.index[term])
 
-    def get_total_document(self) -> int:
+    def get_total_documents(self) -> int:
         return len(self.dataset)
 
 
