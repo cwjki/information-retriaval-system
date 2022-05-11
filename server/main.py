@@ -17,13 +17,12 @@ def home():
     cranfieldParser = CranfieldParser()
     documents = cranfieldParser.parse(CRAN_COLLECTION)
     queries = cranfieldParser.parse(CRAN_QUERIE)
-    return documents
+    return str(documents[0])
 
 
 def main():
     cranfieldParser = CranfieldParser()
     documents = cranfieldParser.parse(CRAN_COLLECTION)
-    print(documents)
     queries = cranfieldParser.parse(CRAN_QUERIE)
 
 

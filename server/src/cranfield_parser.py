@@ -13,7 +13,7 @@ class CranfieldParser:
         documents: List[str] = re.split('.I \d', data)
         documents = [document.strip() for document in documents]
         documents = [document for document in documents if not document == '']
-        return [self.process_document(document for document in documents)]
+        return [self.process_document(document) for document in documents]
 
     def process_document(self, document):
         lines: List[str] = document.split('\n')
@@ -30,7 +30,7 @@ class CranfieldParser:
     def create_document(self, lines: List[str], separators):
         document: Document = Document()
         sections = sorted(separators)
-        sections.append((len(lines)), '')
+        sections.append((len(lines), ''))
         for i, (index, separator) in enumerate(sections):
             if separator == '':
                 break
