@@ -2,7 +2,7 @@ from typing import Counter, List
 from src.preprocess_document import preprocces_document
 from src.inverted_index import InvertedIndex
 from src.dataset import Dataset
-from math import log10
+from math import log10, sqrt
 
 ALPHA = 0.4
 RANKING_COUNT = 20
@@ -51,7 +51,19 @@ class VectorSpaceModel:
         return result
 
     def compute_similarity(self, document_vector, query_vector) -> float:
-        return 0.9
+        dot_product = self.compute_dot_product(query_vector, document_vector)
+        # print("DOT PRODUCT")
+        # print(dot_product)
+        document_norma = self.compute_norma_vector(document_vector)
+        # print("DOCUMENT NORMA")
+        # print(document_norma)
+        query_norma = self.compute_norma_vector(query_vector)
+        # print("QUERY NORMA")
+        # print(query_norma)
+        try:
+            return dot_product / (document_norma * query_norma)
+        except:
+            return 0
 
     def compute_ranking(self, query: str):
         scores: List[float, int] = []
@@ -62,12 +74,30 @@ class VectorSpaceModel:
             scores.append((score, index))
 
         sorted_scores = sorted(scores, reverse=True)
+        # print(sorted_scores)
         index_ranking = []
         for i in range(RANKING_COUNT):
             index_ranking.append(sorted_scores[i][1])
-        
+
+        # print(index_ranking)
         ranking = []
-        for i in range(RANKING_COUNT):
-            ranking.append((i, self.dataset[i]))
+        for index in index_ranking:
+            ranking.append((index, self.dataset[index]))
 
         return ranking
+
+    def compute_dot_product(self, query_vector, document_vector):
+        result = 0.0
+        for term, weight1 in query_vector.items():
+            try:
+                weight2 = document_vector[term]
+                result += weight1 * weight2
+            except KeyError:
+                continue
+        return result
+
+    def compute_norma_vector(self, vector):
+        result = 0.0
+        for term, weight in vector.items():
+            result += (weight ** 2)
+        return sqrt(result)
