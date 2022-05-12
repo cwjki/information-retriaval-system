@@ -1,5 +1,5 @@
 from typing import Counter
-from server.src.preprocess_document import preprocces_document
+from src.preprocess_document import preprocces_document
 from src.inverted_index import InvertedIndex
 from src.dataset import Dataset
 from math import log10

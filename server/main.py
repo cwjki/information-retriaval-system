@@ -1,8 +1,7 @@
 from crypt import methods
 from pathlib import Path
 from flask import Flask, request, jsonify
-from requests import request
-from server.src.vector_space_model import VectorSpaceModel
+from src.vector_space_model import VectorSpaceModel
 from src.cranfield_parser import CranfieldParser
 
 path = Path(__file__).parent
