@@ -45,7 +45,10 @@ class InvertedIndex:
         return self.max_term_frequency_document[document_index]
 
     def get_amount_document_with_term(self, term: str) -> int:
-        return len(self.index[term])
+        try:
+            return len(self.index[term])
+        except KeyError:
+            return 0.1
 
     def get_total_documents(self) -> int:
         return len(self.dataset)

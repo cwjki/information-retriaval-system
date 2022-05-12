@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %} HOME PAGE {% endblock %}
+{% block content %} 
+    <h1>PROYECTO SRI</h1>
+
+    <div>
+        <p>QUERY: "{{ content[0] }}"</p>
+        
+
+        <h1>RANKING</h1>
+        {% for document in content[1] %}
+            <div>
+                <p>NUMBER: {{document[0]}}</p>
+                <p>TITLE: {{ document[1].title }}</p>
+                <p>AUTHOR: {{ document[1].author }}</p>
+                <p>TEXT: {{ document[1].text }}</p>
+            </div>
+            <hr>
+        {% endfor %}
+
+    </div>
+    
+
+{% endblock %}

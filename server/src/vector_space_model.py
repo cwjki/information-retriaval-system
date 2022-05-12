@@ -1,4 +1,4 @@
-from typing import Counter
+from typing import Counter, List
 from src.preprocess_document import preprocces_document
 from src.inverted_index import InvertedIndex
 from src.dataset import Dataset
@@ -51,22 +51,23 @@ class VectorSpaceModel:
         return result
 
     def compute_similarity(self, document_vector, query_vector) -> float:
-        print("SIMILARITY")
-        print(document_vector)
-        print(query_vector)
-        print("FIN")
+        return 0.9
 
     def compute_ranking(self, query: str):
-        scores = []
+        scores: List[float, int] = []
         query_vector = self.generate_query_vector(query)
-        print(query_vector)
         for index in range(len(self.dataset)):
             document_vector = self.document_vectors[index]
             score = self.compute_similarity(document_vector, query_vector)
             scores.append((score, index))
 
         sorted_scores = sorted(scores, reverse=True)
+        index_ranking = []
+        for i in range(RANKING_COUNT):
+            index_ranking.append(sorted_scores[i][1])
+        
         ranking = []
         for i in range(RANKING_COUNT):
-            ranking.append(sorted_scores[i][1])
+            ranking.append((i, self.dataset[i]))
+
         return ranking
