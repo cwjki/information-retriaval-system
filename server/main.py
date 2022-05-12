@@ -1,6 +1,5 @@
-from crypt import methods
 from pathlib import Path
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from src.vector_space_model import VectorSpaceModel
 from src.cranfield_parser import CranfieldParser
 
@@ -17,13 +16,13 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return 'PROYECTO SRI'
+    return render_template("index.html")
 
 
 @app.route("/query", methods=['POST'])
 def query():
     query = request.json['data']
-    ranking = vector_space_model.compute_ranking(query)
+    # ranking = vector_space_model.compute_ranking(query)
 
     return jsonify(ranking)
 
@@ -33,6 +32,6 @@ if __name__ == "__main__":
     documents = cranfieldParser.parse(CRAN_COLLECTION)
     queries = cranfieldParser.parse(CRAN_QUERIE)
 
-    vector_space_model = VectorSpaceModel(documents)
+    # vector_space_model = VectorSpaceModel(documents)
 
-    app.run()
+    app.run(debug=True)
