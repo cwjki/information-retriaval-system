@@ -35,7 +35,7 @@ class Document:
         self.author = ''
 
     def __repr__(self) -> str:
-        return f'Title: {self.title} <br> Author: {self.author} <br> Text: {self.text} <br>'
+        return self.text
 
     def __str__(self) -> str:
         return self.__repr__()

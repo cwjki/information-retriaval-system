@@ -38,7 +38,8 @@ class InvertedIndex:
             return 1
 
     def get_term_frequency_document(self, document_index: int, term: str) -> int:
-        return self.index[term][document_index]
+        document_term = self.find_document_term(term, document_index)
+        return document_term.term_frequency
 
     def get_max_term_frequency_document(self, document_index: int) -> int:
         return self.max_term_frequency_document[document_index]
@@ -49,16 +50,14 @@ class InvertedIndex:
     def get_total_documents(self) -> int:
         return len(self.dataset)
 
+    def find_document_term(self, term: str, document_index: int) -> 'DocumentTerm':
+        documents = self.index[term]
+        document_indexes = [d.document_index for d in documents]
+        index = document_indexes.index(document_index)
+        return documents[index]
+
 
 class DocumentTerm:
     def __init__(self, document_index: int) -> None:
         self.document_index: int = document_index
         self.term_frequency: int = 1
-
-    @property
-    def get_document_index(self) -> int:
-        return self.document_index
-
-    @property
-    def get_term_frequency(self) -> int:
-        return self.term_frequency

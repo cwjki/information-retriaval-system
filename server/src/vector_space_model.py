@@ -25,7 +25,7 @@ class VectorSpaceModel:
     def compute_idf(self, term: str) -> float:
         total_documents = self.index.get_total_documents()
         document_frequency = self.index.get_amount_document_with_term(term)
-        return log10(total_documents, document_frequency)
+        return log10(total_documents / document_frequency)
 
     def compute_wight(self, document_index: int, term: str) -> float:
         tf = self.compute_tf(document_index, term)
@@ -59,6 +59,7 @@ class VectorSpaceModel:
     def compute_ranking(self, query: str):
         scores = []
         query_vector = self.generate_query_vector(query)
+        print(query_vector)
         for index in range(len(self.dataset)):
             document_vector = self.document_vectors[index]
             score = self.compute_similarity(document_vector, query_vector)
