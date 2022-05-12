@@ -1,4 +1,3 @@
-from cmath import log
 from typing import Counter
 from server.src.preprocess_document import preprocces_document
 from src.inverted_index import InvertedIndex
@@ -6,12 +5,15 @@ from src.dataset import Dataset
 from math import log10
 
 ALPHA = 0.4
+RANKING_COUNT = 20
 
 
 class VectorSpaceModel:
     def __init__(self, dataset: Dataset) -> None:
         self.dataset = dataset
         self.index = InvertedIndex(dataset)
+        self.document_vectors = [self.generate_document_vector(
+            index) for index in range(len(self.dataset))]
 
     def compute_tf(self, document_index: int, term: str) -> float:
         term_frequency = self.index.get_term_frequency_document(
@@ -49,4 +51,21 @@ class VectorSpaceModel:
         return result
 
     def compute_similarity(self, document_vector, query_vector) -> float:
-        
+        print("SIMILARITY")
+        print(document_vector)
+        print(query_vector)
+        print("FIN")
+
+    def compute_ranking(self, query: str):
+        scores = []
+        query_vector = self.generate_query_vector(query)
+        for index in range(len(self.dataset)):
+            document_vector = self.document_vectors[index]
+            score = self.compute_similarity(document_vector, query_vector)
+            scores.append((score, index))
+
+        sorted_scores = sorted(scores, reverse=True)
+        ranking = []
+        for i in range(RANKING_COUNT):
+            ranking.append(sorted_scores[i][1])
+        return ranking
