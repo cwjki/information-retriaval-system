@@ -1,3 +1,4 @@
+from collections import defaultdict
 import re
 from typing import List
 from .dataset import Document
@@ -45,4 +46,12 @@ class CranfieldParser:
                 document.author = data
         return document
 
-
+    def parse_cranqrel(self, file):
+        relations = defaultdict(lambda: list())
+        with open(file, 'r') as f:
+            for line in f.readlines():
+                query, document, relation, * \
+                    _ = map(lambda x: int(float(x)), line.split())
+                if relation <= 5:
+                    relations[query-1].append(document-1)
+        return relations
