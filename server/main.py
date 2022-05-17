@@ -1,6 +1,6 @@
 from crypt import methods
 from pathlib import Path
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, render_template
 from src.vector_space_model import VectorSpaceModel
 from src.cranfield_parser import CranfieldParser
 
