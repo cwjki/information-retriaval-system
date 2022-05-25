@@ -1,35 +1,67 @@
 from typing import List, Set
+from .vector_space_model import VectorSpaceModel
 
 
+class Evaluator():
+    def __init__(self, documents, cran_queries, cran_relevant_indexes, model: VectorSpaceModel) -> None:
+        self.documents = documents
+        self.cran_queries = cran_queries
+        self.cran_relevant_indexes = cran_relevant_indexes
+        self.model = model
+        self.precissions = []
+        self.recalls = []
+        self.f1s = []
 
-def compute_precission(cran_relevant_indexes: List[int], model_relevant_indexes: List[int]) -> float:
-    if len(cran_relevant_indexes) == 0:
-        return 0
+    def evaluate(self):
+        self.compute_metrics()
+        return self.average(self.precissions), self.average(self.recalls), self.average(self.f1s)
 
-    cran_set = set(cran_relevant_indexes)
-    model_set = set(model_relevant_indexes)
-    rr = cran_set.intersection(model_set)
-    ri = model_set.difference(cran_set)
-    return len(rr) / (len(rr) + len(ri))
+    def compute_metrics(self):
+        for i in range(len(self.cran_queries)):
+            query = self.cran_queries[i]
+            cran_relevant_indexes = self.cran_relevant_indexes[i]
+            model_relevant_indexes = self.model.compute_ranking(str(query))
 
+            self.precissions.append(self.compute_precission(
+                cran_relevant_indexes, model_relevant_indexes))
 
-def compute_recall(cran_relevant_indexes: List[int], model_relevant_indexes: List[int]) -> float:
-    if len(cran_relevant_indexes) == 0:
-        return 0
+            self.recalls.append(self.compute_recall(
+                cran_relevant_indexes, model_relevant_indexes))
 
-    cran_set = set(cran_relevant_indexes)
-    model_set = set(model_relevant_indexes)
-    rr = cran_set.intersection(model_set)
-    nr = cran_set.difference(model_set)
-    return len(rr) / (len(rr) + len(nr))
+            self.f1s.append(self.compute_f1(
+                cran_relevant_indexes, model_relevant_indexes))
 
+    def compute_precission(self, cran_relevant_indexes: List[int], model_relevant_indexes: List[int]) -> float:
+        if len(cran_relevant_indexes) == 0:
+            return 0
 
-def compute_f1(cran_relevant_indexes: List[int], model_relevant_indexes: List[int]) -> float:
-    precission = compute_precission(
-        cran_relevant_indexes, model_relevant_indexes)
-    recall = compute_recall(cran_relevant_indexes, model_relevant_indexes)
+        cran_set = set(cran_relevant_indexes)
+        model_set = set(model_relevant_indexes)
+        rr = cran_set.intersection(model_set)
+        ri = model_set.difference(cran_set)
+        return len(rr) / (len(rr) + len(ri))
 
-    if precission == recall == 0:
-        return 0
+    def compute_recall(self, cran_relevant_indexes: List[int], model_relevant_indexes: List[int]) -> float:
+        if len(cran_relevant_indexes) == 0:
+            return 0
 
-    return (2 / (1/precission) + (1/recall))
+        cran_set = set(cran_relevant_indexes)
+        model_set = set(model_relevant_indexes)
+        rr = cran_set.intersection(model_set)
+        nr = cran_set.difference(model_set)
+        return len(rr) / (len(rr) + len(nr))
+
+    def compute_f1(self, cran_relevant_indexes: List[int], model_relevant_indexes: List[int]) -> float:
+        precission = self.compute_precission(
+            cran_relevant_indexes, model_relevant_indexes)
+        recall = self.compute_recall(
+            cran_relevant_indexes, model_relevant_indexes)
+
+        if precission == recall == 0:
+            return 0
+
+        return (2 / (1/precission) + (1/recall))
+
+    def average(self, values: List[float]) -> float:
+        total = len(values)
+        return sum(values) / total
