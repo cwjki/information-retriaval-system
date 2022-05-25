@@ -31,8 +31,6 @@ if __name__ == "__main__":
     documents = cranfieldParser.parse(CRAN_COLLECTION)
     queries = cranfieldParser.parse(CRAN_QUERIE)
     relations = cranfieldParser.parse_cranqrel(CRAN_QREL)
-    print(relations)
-
     vector_space_model = VectorSpaceModel(documents)
 
     app.run(debug=True)
