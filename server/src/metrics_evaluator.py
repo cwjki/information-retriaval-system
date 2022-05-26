@@ -20,7 +20,16 @@ class Evaluator():
         for i in range(len(self.cran_queries)):
             query = self.cran_queries[i]
             cran_relevant_indexes = self.cran_relevant_indexes[i]
-            model_relevant_indexes = self.model.compute_ranking(str(query))
+            model_relevant_indexes = self.model.get_ranking_index(
+                str(query), len(cran_relevant_indexes))
+
+            print(
+                f'CRAN {i} indices relevantes -> {len(cran_relevant_indexes)}')
+            print(
+                f'MODEL {i} indices relevantes -> {len(model_relevant_indexes)}')
+
+            print(f'CRAN relevant indexes -> {cran_relevant_indexes}')
+            print(f'MODEL relevant indexes -> {model_relevant_indexes}')
 
             self.precissions.append(self.compute_precission(
                 cran_relevant_indexes, model_relevant_indexes))

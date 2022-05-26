@@ -1,6 +1,7 @@
 from crypt import methods
 from pathlib import Path
 from flask import Flask, request, render_template
+from src.metrics_evaluator import Evaluator
 from src.vector_space_model import VectorSpaceModel
 from src.cranfield_parser import CranfieldParser
 
@@ -24,6 +25,13 @@ def home():
         return render_template('results.html', content=[query, ranking])
     else:
         return render_template('index.html')
+
+
+@app.route("/evaluate", methods=['GET'])
+def evaluate():
+    evaluator = Evaluator(documents, queries, relations, vector_space_model)
+    metrics = evaluator.evaluate()
+    return render_template('evaluate.html', content=[metrics])
 
 
 if __name__ == "__main__":

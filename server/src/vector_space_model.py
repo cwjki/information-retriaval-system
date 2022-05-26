@@ -4,7 +4,7 @@ from src.inverted_index import InvertedIndex
 from src.dataset import Dataset
 from math import log10, sqrt
 
-ALPHA = 0.4
+ALPHA = 0.5
 RANKING_COUNT = 20
 
 
@@ -65,7 +65,7 @@ class VectorSpaceModel:
         except:
             return 0
 
-    def compute_ranking(self, query: str):
+    def compute_ranking(self, query: str, ranking_count=RANKING_COUNT):
         scores: List[float, int] = []
         query_vector = self.generate_query_vector(query)
         for index in range(len(self.dataset)):
@@ -76,7 +76,7 @@ class VectorSpaceModel:
         sorted_scores = sorted(scores, reverse=True)
         # print(sorted_scores)
         index_ranking = []
-        for i in range(RANKING_COUNT):
+        for i in range(ranking_count):
             index_ranking.append(sorted_scores[i][1])
 
         # print(index_ranking)
@@ -85,6 +85,11 @@ class VectorSpaceModel:
             ranking.append((index, self.dataset[index]))
 
         return ranking
+
+    def get_ranking_index(self, query: str, ranking_count=RANKING_COUNT):
+        ranking = self.compute_ranking(query, ranking_count)
+        indexes = [index for index, _ in ranking]
+        return indexes
 
     def compute_dot_product(self, query_vector, document_vector):
         result = 0.0
