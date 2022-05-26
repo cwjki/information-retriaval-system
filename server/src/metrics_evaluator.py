@@ -14,6 +14,8 @@ class Evaluator():
 
     def evaluate(self):
         self.compute_metrics()
+        print(f'PRECISSION -> {self.precissions}')
+        print(f'RECALL -> {self.recalls}')
         return self.average(self.precissions), self.average(self.recalls), self.average(self.f1s)
 
     def compute_metrics(self):
@@ -23,13 +25,13 @@ class Evaluator():
             model_relevant_indexes = self.model.get_ranking_index(
                 str(query), len(cran_relevant_indexes))
 
-            print(
-                f'CRAN {i} indices relevantes -> {len(cran_relevant_indexes)}')
-            print(
-                f'MODEL {i} indices relevantes -> {len(model_relevant_indexes)}')
+            # print(
+            #     f'CRAN {i} indices relevantes -> {len(cran_relevant_indexes)}')
+            # print(
+            #     f'MODEL {i} indices relevantes -> {len(model_relevant_indexes)}')
 
-            print(f'CRAN relevant indexes -> {cran_relevant_indexes}')
-            print(f'MODEL relevant indexes -> {model_relevant_indexes}')
+            # print(f'CRAN relevant indexes -> {cran_relevant_indexes}')
+            # print(f'MODEL relevant indexes -> {model_relevant_indexes}')
 
             self.precissions.append(self.compute_precission(
                 cran_relevant_indexes, model_relevant_indexes))
@@ -48,6 +50,12 @@ class Evaluator():
         model_set = set(model_relevant_indexes)
         rr = cran_set.intersection(model_set)
         ri = model_set.difference(cran_set)
+
+        # print(f'CRAN RELEVANTES -> {cran_set}')
+        # print(f'MODEL RELEVANTES -> {model_set}')
+        # print(f'RR -> {rr}')
+        # print(f'RI -> {ri}')
+
         return len(rr) / (len(rr) + len(ri))
 
     def compute_recall(self, cran_relevant_indexes: List[int], model_relevant_indexes: List[int]) -> float:
@@ -58,6 +66,11 @@ class Evaluator():
         model_set = set(model_relevant_indexes)
         rr = cran_set.intersection(model_set)
         nr = cran_set.difference(model_set)
+
+        # print(f'RR -> {rr}')
+        # print(f'NR -> {nr}')
+        # print(f'NO RECUPERADOS RELEVANTES -> {len(nr)}')
+
         return len(rr) / (len(rr) + len(nr))
 
     def compute_f1(self, cran_relevant_indexes: List[int], model_relevant_indexes: List[int]) -> float:
