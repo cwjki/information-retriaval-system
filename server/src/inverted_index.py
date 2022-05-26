@@ -48,7 +48,7 @@ class InvertedIndex:
         try:
             return len(self.index[term])
         except KeyError:
-            return 0.1
+            return 0.001
 
     def get_total_documents(self) -> int:
         return len(self.dataset)
@@ -58,6 +58,16 @@ class InvertedIndex:
         document_indexes = [d.document_index for d in documents]
         index = document_indexes.index(document_index)
         return documents[index]
+
+    def remove_non_indexed_terms(self, terms: List[str]) -> List[str]:
+        result = []
+        for term in terms:
+            try:
+                _ = self.index[term]
+                result.append(term)
+            except KeyError:
+                continue
+        return result
 
 
 class DocumentTerm:
