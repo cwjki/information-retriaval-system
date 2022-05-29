@@ -5,7 +5,7 @@ from src.dataset import Dataset
 from math import log10, sqrt
 
 ALPHA = 0.5
-RANKING_COUNT = 5
+RANKING_COUNT = 10
 
 
 class VectorSpaceModel:

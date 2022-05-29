@@ -1,24 +1,31 @@
 {% extends "base.html" %}
 {% block title %} RESULT PAGE {% endblock %}
 {% block content %} 
-    <h1>PROYECTO SRI</h1>
+    <div class="container">
+        <div class="page-header">
+            <h1>Ranking de Documentos</h1>
+            <h2><small>Consulta: "{{ content[0] }}"</small></h2>
+            <h2><small>Cantidad: "{{ content[2] }}"</small></h2>
+        </div>
 
-    <div>
-        <p>QUERY: "{{ content[0] }}"</p>
-        
-
-        <h1>RANKING</h1>
+        <div class="panel panel-primary">
         {% for document in content[1] %}
-            <div>
-                <p>NUMBER: {{document[0]}}</p>
-                <p>TITLE: {{ document[1].title }}</p>
-                <p>AUTHOR: {{ document[1].author }}</p>
-                <p>TEXT: {{ document[1].text }}</p>
+            <div class="panel-heading">
+                <h2 class="panel-title">
+                    <span class="badge">#{{ document[0] }}</span>
+                    <p>  Título: {{ document[1].title }}</p>
+                </h2>
             </div>
-            <hr>
-        {% endfor %}
-
+            <div class="panel-body">
+                <p>Texto: {{ document[1].text }}</p>
+            </div>
+            <div class="panel-footer">
+                <p>Autor: {{ document[1].author }}</p>
+            </div>
+        {% endfor %}    
+        </div>
     </div>
+    
     
 
 {% endblock %}

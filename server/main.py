@@ -21,8 +21,8 @@ def home():
     if request.method == 'POST':
         query = request.form['query']
         ranking = vector_space_model.compute_ranking(query)
-
-        return render_template('results.html', content=[query, ranking])
+        count = len(ranking)
+        return render_template('results.html', content=[query, ranking, count])
     else:
         return render_template('index.html')
 
