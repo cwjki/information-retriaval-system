@@ -1,14 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{% endblock %}</title>
-</head>
-<body>
-    {% block content %} 
-    
-    {% endblock%}
-</body>
-</html>
+{%- extends "bootstrap/base.html" %}
+
+{% block title %} BASE TEMPLATE {% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-default">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header ">
+      <a class="navbar-brand navbar-right disable">PROYECTO SRI</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/">Busqueda</a></li>
+        <li><a href="/evaluate">Evaluar</a></li>  
+      </ul>
+  </div><!-- /.container-fluid -->
+</nav>
+{% endblock %}
+
+

@@ -1,4 +1,5 @@
 from typing import List, Set
+
 from .vector_space_model import VectorSpaceModel
 
 
@@ -14,16 +15,21 @@ class Evaluator():
 
     def evaluate(self):
         self.compute_metrics()
-        print(f'PRECISSION -> {self.precissions}')
-        print(f'RECALL -> {self.recalls}')
+        # print(f'PRECISSION -> {self.precissions}')
+        # print(f'RECALL -> {self.recalls}')
         return self.average(self.precissions), self.average(self.recalls), self.average(self.f1s)
 
     def compute_metrics(self):
         for i in range(len(self.cran_queries)):
             query = self.cran_queries[i]
             cran_relevant_indexes = self.cran_relevant_indexes[i]
-            model_relevant_indexes = self.model.get_ranking_index(
-                str(query), len(cran_relevant_indexes))
+
+            # recuperar la misma cantidad de documetos que Cran
+            # model_relevant_indexes = self.model.get_ranking_index(
+            #     str(query), len(cran_relevant_indexes))
+
+            # recuperar la cantidad prefijada de documentos
+            model_relevant_indexes = self.model.get_ranking_index(str(query))
 
             # print(
             #     f'CRAN {i} indices relevantes -> {len(cran_relevant_indexes)}')
@@ -41,6 +47,8 @@ class Evaluator():
 
             self.f1s.append(self.compute_f1(
                 cran_relevant_indexes, model_relevant_indexes))
+        
+        print(self.f1s)
 
     def compute_precission(self, cran_relevant_indexes: List[int], model_relevant_indexes: List[int]) -> float:
         if len(cran_relevant_indexes) == 0:
@@ -82,7 +90,7 @@ class Evaluator():
         if precission == recall == 0:
             return 0
 
-        return (2 / (1/precission) + (1/recall))
+        return 2 * (precission * recall) / (precission + recall)
 
     def average(self, values: List[float]) -> float:
         total = len(values)

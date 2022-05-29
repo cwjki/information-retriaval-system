@@ -1,12 +1,11 @@
-from crypt import methods
 from pathlib import Path
 from flask import Flask, request, render_template
+from flask_bootstrap import Bootstrap
 from src.metrics_evaluator import Evaluator
 from src.vector_space_model import VectorSpaceModel
 from src.cranfield_parser import CranfieldParser
 
 path = Path(__file__).parent
-
 
 CRAN_COLLECTION = str(path) + "/cranfield_collection/cran.all.1400"
 CRAN_QUERIE = str(path) + '/cranfield_collection/cran.qry'
@@ -14,6 +13,7 @@ CRAN_QREL = str(path) + '/cranfield_collection/cranqrel'
 
 
 app = Flask(__name__)
+Bootstrap(app)
 
 
 @app.route("/", methods=['GET', 'POST'])
