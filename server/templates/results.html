@@ -5,7 +5,7 @@
         <div class="page-header">
             <h1>Ranking de Documentos</h1>
             <h2><small>Consulta: "{{ content[0] }}"</small></h2>
-            <h2><small>Cantidad: "{{ content[2] }}"</small></h2>
+            <h2><small>Cantidad de documentos recuperados: {{ content[2] }}</small></h2>
         </div>
 
         <div class="panel panel-primary">
@@ -13,14 +13,14 @@
             <div class="panel-heading">
                 <h2 class="panel-title">
                     <span class="badge">#{{ document[0] }}</span>
-                    <p>  Título: {{ document[1].title }}</p>
+                    <p>Título: {{ document[1].title }}</p>
                 </h2>
             </div>
             <div class="panel-body">
                 <p>Texto: {{ document[1].text }}</p>
             </div>
             <div class="panel-footer">
-                <p>Autor: {{ document[1].author }}</p>
+                <p>Autor(es): {{ document[1].author }}</p>
             </div>
         {% endfor %}    
         </div>

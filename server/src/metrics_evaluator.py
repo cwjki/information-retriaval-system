@@ -48,7 +48,6 @@ class Evaluator():
             self.f1s.append(self.compute_f1(
                 cran_relevant_indexes, model_relevant_indexes))
         
-        print(self.f1s)
 
     def compute_precission(self, cran_relevant_indexes: List[int], model_relevant_indexes: List[int]) -> float:
         if len(cran_relevant_indexes) == 0:

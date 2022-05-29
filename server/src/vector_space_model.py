@@ -46,7 +46,7 @@ class VectorSpaceModel:
         terms = preprocces_document(query)
         terms = self.index.remove_non_indexed_terms(terms)
         query_frequency = Counter(terms)
-        max_frequecy = max(query_frequency.values())
+        max_frequecy = max(query_frequency.values()) if len(query_frequency) != 0 else 0
         result = {term: self.compute_query_weight(
             term, query_frequency[term], max_frequecy) for term in terms}
         return result

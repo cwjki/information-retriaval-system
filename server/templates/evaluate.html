@@ -1,18 +1,14 @@
 {% extends "base.html" %}
 {% block title %} EVALUATE PAGE {% endblock %}
 {% block content %} 
-    <h1>PROYECTO SRI</h1>
 
-    <div>
-        <p>MEDIDAS DE EVALUACIÓN</p>
-        
-        <div>
-            <p>Precisión: {{content[0][0]}}</p>
-            <p>Recobrado: {{ content[0][1]}}</p>
-            <p>Medida F1: {{ content[0][2]}}</p>
+    <div class="container">
+         <div class="page-header">
+            <h2>MEDIDAS DE EVALUACIÓN</h2>
+            <h2><small>Precisión: {{content[0][0]}}</small></h2>
+            <h2><small>Recobrado: {{ content[0][1]}}</small></h2>
+            <h2><small>Medida F1: {{ content[0][2]}}</small></h2>
         </div>
-        <hr>
-
     </div>
     
 
