@@ -1,3 +1,4 @@
+import re
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 from nltk.tokenize import wordpunct_tokenize
@@ -56,10 +57,38 @@ class IRSystem():
             self.ranking_function(corpus, queries, 1, mode)
 
 
-
-
 class IR_TF_IDF(IRSystem):
     def __init__(self, corpus, queries) -> None:
         super().__init__(corpus, queries)
         self.ranking_query = dict()
         self.initialize_model(corpus, queries, 1)
+
+
+class IR_Boolean(IRSystem):
+    def __init__(self, corpus, queries) -> None:
+        super().__init__(corpus, queries)
+        self.ranking_query = dict()
+
+        query_id = 0
+        if isinstance(queries, list):
+            for query in queries:
+                or_set, and_set = self.preprocess_query(query)
+                dict_matches = self.preprocess_operators(
+                    corpus, or_set, and_set, query_id)
+                query_id += 1
+        else:
+            or_set, and_set = self.preprocess_query(query)
+            dict_matches = self.preprocess_operators(
+                corpus, or_set, and_set, 1)
+
+    def preprocess_query(self, query):
+        text = re.split(r'[^\w\s]', query)
+        or_set = []
+        and_set = []
+        for phrase in text:
+            txt = re.split('or', phrase)
+            if len(txt) > 1:
+                or_set.append(txt)
+            else:
+                and_set.append(txt)
+        return or_set, and_set
