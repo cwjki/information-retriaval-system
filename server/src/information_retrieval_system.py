@@ -76,10 +76,12 @@ class IR_Boolean(IRSystem):
                 dict_matches = self.preprocess_operators(
                     corpus, or_set, and_set, query_id)
                 query_id += 1
+                self.print_result(dict_matches)
         else:
             or_set, and_set = self.preprocess_query(query)
             dict_matches = self.preprocess_operators(
                 corpus, or_set, and_set, 1)
+            self.print_result(dict_matches)
 
     def preprocess_query(self, query):
         text = re.split(r'[^\w\s]', query)
@@ -92,3 +94,20 @@ class IR_Boolean(IRSystem):
             else:
                 and_set.append(txt)
         return or_set, and_set
+
+    def preprocess_operators(self, corpus, or_set, and_set, query_id):
+        or_list = [value for sublist in or_set for value in sublist]
+        for or_text in or_list:
+            dict_matches = self.document_matches(corpus, or_text)
+        if len(and_set) > 0:
+            and_list = [value for sublist in and_set for value in sublist]
+            and_txt = ', '.join(and_list)
+            dict_matches = self.document_matches(corpus, and_txt)
+        self.ranking_query[query_id] = dict_matches.items()
+        return dict_matches
+
+
+    def print_result(self, dict_matches: dict):
+        for keys, values in dict_matches.items():
+            print("[ Score = " + str(values) + "] ")
+            print("Document = " + keys)
