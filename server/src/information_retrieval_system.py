@@ -106,6 +106,22 @@ class IR_Boolean(IRSystem):
         self.ranking_query[query_id] = dict_matches.items()
         return dict_matches
 
+    def document_matches(self, corpus, query):
+        dictionary, pdocs = self.preprocess_corpus(corpus)
+        vquery = self.preprocess_document(query)
+        dict_matches = dict((doc,0) for doc in corpus)
+        doc_number = 0
+        for doc in pdocs:
+            intersection_list = list(set(doc) & set(vquery))
+            if len(intersection_list) == len(vquery):
+                dict_matches[corpus[doc_number]] = 1
+            doc_number += 1
+        return dict_matches
+
+
+    def preprocess_corpus(self, corpus):
+        dictionary, pdocs = self.create_dictionary(corpus)
+        return dictionary, pdocs
 
     def print_result(self, dict_matches: dict):
         for keys, values in dict_matches.items():
