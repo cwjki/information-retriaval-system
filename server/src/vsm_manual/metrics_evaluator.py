@@ -20,7 +20,7 @@ class Evaluator():
         return self.average(self.precissions), self.average(self.recalls), self.average(self.f1s)
 
     def compute_metrics(self):
-        for i in range(len(self.cran_queries)):
+        for i, query in enumerate(self.cran_queries):
             query = self.cran_queries[i]
             cran_relevant_indexes = self.cran_relevant_indexes[i]
 
@@ -47,7 +47,6 @@ class Evaluator():
 
             self.f1s.append(self.compute_f1(
                 cran_relevant_indexes, model_relevant_indexes))
-        
 
     def compute_precission(self, cran_relevant_indexes: List[int], model_relevant_indexes: List[int]) -> float:
         if len(cran_relevant_indexes) == 0:

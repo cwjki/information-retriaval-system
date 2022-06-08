@@ -1,5 +1,8 @@
 
 
+from sys import flags
+
+
 class IREvaluator():
     def __init__(self, relevance_docs, ranking_query, continue_eval, only_query_id) -> None:
         self.relevance_docs = relevance_docs
@@ -31,4 +34,27 @@ class IREvaluator():
             return relevance_query
 
     def evaluate_query(self, ranking, q_relevance_docs, query_id):
-        pass
+        if self.continue_eval:
+            [rr, ri] = self.relevant_doc_retrieved(
+                query_id, ranking, q_relevance_docs)
+
+            precission = self.compute_precission(rr, ri)
+
+    def relevant_doc_retrieved(self, query, ranking, q_relevant_docs):
+        rr = 0
+        ri = 0
+        for doc in ranking:
+            if str(doc[0]) in q_relevant_docs[query]:
+                rr += 1
+            else:
+                ri += 1
+        return rr, ri
+
+    def compute_precission(self, rr, ri):
+        retrieved = rr + ri
+        precission = float(rr) / float(retrieved)
+        return precission
+
+    def compute_recall(self, rr, rrr):
+        recall = float(rr) / float(rrr)
+        return recall

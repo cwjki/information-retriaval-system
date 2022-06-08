@@ -7,9 +7,10 @@ from src.vsm_manual.cranfield_parser import CranfieldParser
 
 path = Path(__file__).parent
 
-CRAN_COLLECTION = str(path) + "/src/collections/cranfield_collection/cran.all.1400"
 CRAN_QUERIE = str(path) + '/src/collections/cranfield_collection/cran.qry'
 CRAN_QREL = str(path) + '/src/collections/cranfield_collection/cranqrel'
+CRAN_COLLECTION = str(
+    path) + "/src/collections/cranfield_collection/cran.all.1400"
 
 
 app = Flask(__name__)
@@ -35,7 +36,6 @@ def evaluate():
 
 
 if __name__ == "__main__":
-    print(path)
     cranfieldParser = CranfieldParser()
     documents = cranfieldParser.parse(CRAN_COLLECTION)
     queries = cranfieldParser.parse(CRAN_QUERIE)
