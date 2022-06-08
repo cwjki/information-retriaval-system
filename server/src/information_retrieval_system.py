@@ -1,3 +1,4 @@
+from operator import itemgetter
 import re
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
@@ -9,6 +10,8 @@ class IRSystem():
     def __init__(self, corpus, queries) -> None:
         self.corpus = corpus
         self.queries = queries
+        self.query_weight = []
+        self.ranking_query = []
 
     def preprocess_document(self, document):
         stopset = set(stopwords.words('english'))
@@ -31,7 +34,17 @@ class IRSystem():
         return vectors
 
     def ranking_function(self, corpus, query, query_id, mode):
-        pass
+        model, dictionary = self.create_dictionary(corpus)
+        loaded_corpus = corpora.MmCorpus('vsm_docs.mm')
+        index = similarities.MatrixSimilarity(
+            loaded_corpus, num_features=len(dictionary))
+        vquery = self.create_query_vector(query, dictionary)
+        self.query_weight = model[vquery]
+        sim = index[self.query_weight]
+        ranking = sorted(enumerate(sim), key=itemgetter(1), reverse=True)
+        self.ranking_query[query_id] = ranking
+        for doc, score in ranking:
+            print("[ Score = " + "%.3f" % round(score, 3) + "] " + corpus[doc])
 
     def create_query_vector(self, query, dictionary: corpora.Dictionary):
         pquery = self.preprocess_document(query)
@@ -107,9 +120,9 @@ class IR_Boolean(IRSystem):
         return dict_matches
 
     def document_matches(self, corpus, query):
-        dictionary, pdocs = self.preprocess_corpus(corpus)
+        _, pdocs = self.preprocess_corpus(corpus)
         vquery = self.preprocess_document(query)
-        dict_matches = dict((doc,0) for doc in corpus)
+        dict_matches = dict((doc, 0) for doc in corpus)
         doc_number = 0
         for doc in pdocs:
             intersection_list = list(set(doc) & set(vquery))
@@ -117,7 +130,6 @@ class IR_Boolean(IRSystem):
                 dict_matches[corpus[doc_number]] = 1
             doc_number += 1
         return dict_matches
-
 
     def preprocess_corpus(self, corpus):
         dictionary, pdocs = self.create_dictionary(corpus)
