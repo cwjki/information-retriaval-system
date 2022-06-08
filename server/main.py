@@ -1,15 +1,15 @@
 from pathlib import Path
 from flask import Flask, request, render_template
 from flask_bootstrap import Bootstrap
-from vsm_manual.metrics_evaluator import Evaluator
-from vsm_manual.vector_space_model import VectorSpaceModel
-from vsm_manual.cranfield_parser import CranfieldParser
+from src.vsm_manual.metrics_evaluator import Evaluator
+from src.vsm_manual.vector_space_model import VectorSpaceModel
+from src.vsm_manual.cranfield_parser import CranfieldParser
 
 path = Path(__file__).parent
 
-CRAN_COLLECTION = str(path) + "/collections/cranfield_collection/cran.all.1400"
-CRAN_QUERIE = str(path) + '/collections/cranfield_collection/cran.qry'
-CRAN_QREL = str(path) + '/collections/cranfield_collection/cranqrel'
+CRAN_COLLECTION = str(path) + "/src/collections/cranfield_collection/cran.all.1400"
+CRAN_QUERIE = str(path) + '/src/collections/cranfield_collection/cran.qry'
+CRAN_QREL = str(path) + '/src/collections/cranfield_collection/cranqrel'
 
 
 app = Flask(__name__)
