@@ -1,7 +1,7 @@
 from typing import Counter, List
-from src.preprocess_document import preprocces_document
-from src.inverted_index import InvertedIndex
-from src.dataset import Dataset
+from .preprocess_document import preprocces_document
+from .inverted_index import InvertedIndex
+from .dataset import Dataset
 from math import log10, sqrt
 
 ALPHA = 0.5
