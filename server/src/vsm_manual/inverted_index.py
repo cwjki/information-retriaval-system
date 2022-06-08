@@ -1,6 +1,6 @@
 from typing import Dict, List
-from src.dataset import Dataset
-from src.preprocess_document import preprocces_document
+from .dataset import Dataset
+from .preprocess_document import preprocces_document
 
 
 class InvertedIndex:

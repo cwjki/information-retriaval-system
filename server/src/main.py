@@ -7,9 +7,9 @@ from vsm_manual.cranfield_parser import CranfieldParser
 
 path = Path(__file__).parent
 
-CRAN_COLLECTION = str(path) + "/cranfield_collection/cran.all.1400"
-CRAN_QUERIE = str(path) + '/cranfield_collection/cran.qry'
-CRAN_QREL = str(path) + '/cranfield_collection/cranqrel'
+CRAN_COLLECTION = str(path) + "/collections/cranfield_collection/cran.all.1400"
+CRAN_QUERIE = str(path) + '/collections/cranfield_collection/cran.qry'
+CRAN_QREL = str(path) + '/collections/cranfield_collection/cranqrel'
 
 
 app = Flask(__name__)
