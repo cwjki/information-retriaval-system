@@ -17,8 +17,13 @@ app = Flask(__name__)
 Bootstrap(app)
 
 
-@app.route("/", methods=['GET', 'POST'])
+@app.route("/", methods=['GET'])
 def home():
+    return render_template('home.html')
+
+
+@app.route("/vsm", methods=['GET', 'POST'])
+def vsm():
     if request.method == 'POST':
         query = request.form['query']
         ranking = vector_space_model.compute_ranking(query)
@@ -36,6 +41,8 @@ def evaluate():
 
 
 if __name__ == "__main__":
+
+    # VECTOR SPACE MODEL with Cranfield Collection
     cranfieldParser = CranfieldParser()
     documents = cranfieldParser.parse(CRAN_COLLECTION)
     queries = cranfieldParser.parse(CRAN_QUERIE)
