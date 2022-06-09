@@ -7,14 +7,14 @@ from gensim import corpora, models, similarities
 
 
 class IRSystem():
-    def __init__(self, corpus, queries) -> None:
+    def __init__(self, corpus, queries=None) -> None:
         self.corpus = corpus
         self.queries = queries
         self.query_weight = []
         self.ranking_query = []
 
     def preprocess_document(self, document):
-        stopset = set(stopwords.words('english'))
+        stopset = set(stopwords.words())
         stemmer = PorterStemmer()
         tokens = wordpunct_tokenize(document)
         clean = [token.lower() for token in tokens if token.lower()
@@ -78,23 +78,24 @@ class IR_TF_IDF(IRSystem):
 
 
 class IR_Boolean(IRSystem):
-    def __init__(self, corpus, queries) -> None:
+    def __init__(self, corpus, queries=None) -> None:
         super().__init__(corpus, queries)
         self.ranking_query = dict()
 
+    def compute_ranking(self, queries, count=20):
         query_id = 0
         if isinstance(queries, list):
             for query in queries:
                 or_set, and_set = self.preprocess_query(query)
                 dict_matches = self.preprocess_operators(
-                    corpus, or_set, and_set, query_id)
+                    self.corpus, or_set, and_set, query_id)
                 query_id += 1
-                self.print_result(dict_matches)
         else:
-            or_set, and_set = self.preprocess_query(query)
+            or_set, and_set = self.preprocess_query(queries)
             dict_matches = self.preprocess_operators(
-                corpus, or_set, and_set, 1)
-            self.print_result(dict_matches)
+                self.corpus, or_set, and_set, 1)
+
+        return self._compute_ranking(dict_matches, count)
 
     def preprocess_query(self, query):
         text = re.split(r'[^\w\s]', query)
@@ -139,3 +140,13 @@ class IR_Boolean(IRSystem):
         for keys, values in dict_matches.items():
             print("[ Score = " + str(values) + "] ")
             print("Document = " + keys)
+
+    def _compute_ranking(self, dict_matches: dict, count: int):
+        ranking = []
+        for key, value in dict_matches.items():
+            if count == 0:
+                break
+            if value == 1:
+                ranking.append((value, key))
+                count -= 1
+        return ranking
