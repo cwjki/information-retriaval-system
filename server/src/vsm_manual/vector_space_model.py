@@ -4,8 +4,9 @@ from .inverted_index import InvertedIndex
 from .dataset import Dataset
 from math import log10, sqrt
 
+
 ALPHA = 0.5
-RANKING_COUNT = 10
+RANKING_COUNT = 20
 
 
 class VectorSpaceModel:
@@ -46,7 +47,8 @@ class VectorSpaceModel:
         terms = preprocces_document(query)
         terms = self.index.remove_non_indexed_terms(terms)
         query_frequency = Counter(terms)
-        max_frequecy = max(query_frequency.values()) if len(query_frequency) != 0 else 0
+        max_frequecy = max(query_frequency.values()) if len(
+            query_frequency) != 0 else 0
         result = {term: self.compute_query_weight(
             term, query_frequency[term], max_frequecy) for term in terms}
         return result
@@ -107,3 +109,6 @@ class VectorSpaceModel:
         for term, weight in vector.items():
             result += (weight ** 2)
         return sqrt(result)
+
+
+
