@@ -39,6 +39,7 @@ class IRSystem():
         index = similarities.MatrixSimilarity(
             loaded_corpus, num_features=len(dictionary))
         vquery = self.create_query_vector(query, dictionary)
+        print(vquery)
         self.query_weight = model[vquery]
         sim = index[self.query_weight]
         ranking = sorted(enumerate(sim), key=itemgetter(1), reverse=True)
@@ -67,6 +68,7 @@ class IRSystem():
         query_id = 0
         if isinstance(queries, list):
             for query in queries:
+                print(query)
                 self.ranking_function(corpus, query, query_id, mode)
                 query_id += 1
         else:

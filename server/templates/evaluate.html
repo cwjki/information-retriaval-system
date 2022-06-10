@@ -10,6 +10,49 @@
             <h2><small>Medida F1: {{ content[0][2]}}</small></h2>
         </div>
     </div>
+
+    <div class="container">
+        <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">VSM</div>
+
+        <!-- Table -->
+        <table class="table">
+            <tr>
+                <th>Precisión</th>
+                <th>Recobrado</th>
+                <th>Medida F1</th>
+            </tr>
+            <tr>
+                <td>{{ content[0][0] }}</td>
+                <td>{{ content[0][1] }}</td>
+                <td>{{ content[0][2] }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="container">
+        <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">BOOLEAN</div>
+
+        <!-- Table -->
+        <table class="table">
+            <tr>
+                <th>Precisión</th>
+                <th>Recobrado</th>
+                <th>Medida F1</th>
+            </tr>
+            <tr>
+                <td>{{ content[1][0] }}</td>
+                <td>{{ content[1][1] }}</td>
+                <td>{{ content[1][2] }}</td>
+            </tr>
+        </table>
+    </div>
+
+
+    </div>
     
 
 {% endblock %}
