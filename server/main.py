@@ -2,11 +2,11 @@ from crypt import methods
 from pathlib import Path
 from flask import Flask, request, render_template
 from flask_bootstrap import Bootstrap
-from src.vsm_manual.metrics_evaluator import Evaluator
-from src.vsm_manual.vector_space_model import VectorSpaceModel
-from src.vsm_manual.cranfield_parser import CranfieldParser
+from src.vsm_cranfield.metrics_evaluator import Evaluator
+from src.vsm_cranfield.vector_space_model import VectorSpaceModel
+from src.vsm_cranfield.cranfield_parser import CranfieldParser
 from src.utils import save_model, load_model, med_parse
-from src.ir_system.models import IR_Boolean, IR_TF_IDF
+from src.irs_med import IR_Boolean, IR_TF_IDF
 
 
 path = Path(__file__).parent
