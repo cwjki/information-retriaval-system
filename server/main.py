@@ -6,7 +6,7 @@ from src.vsm_cranfield.metrics_evaluator import Evaluator
 from src.vsm_cranfield.vector_space_model import VectorSpaceModel
 from src.vsm_cranfield.cranfield_parser import CranfieldParser
 from src.utils import save_model, load_model, med_parse
-from src.irs_med import IR_Boolean, IR_TF_IDF
+from src.irs_med.models import IR_Boolean, IR_TF_IDF
 
 
 path = Path(__file__).parent
