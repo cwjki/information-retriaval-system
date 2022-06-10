@@ -1,3 +1,4 @@
+from crypt import methods
 from pathlib import Path
 from flask import Flask, request, render_template
 from flask_bootstrap import Bootstrap
@@ -54,8 +55,20 @@ def boolean():
     if request.method == 'POST':
         query = request.form['query']
         ranking = boolean_model.compute_ranking(query)
-        print(ranking)
         count = len(ranking)
+        return render_template('boolean_results.html', content=[query, ranking, count])
+
+    else:
+        return render_template('index.html')
+
+
+@app.route("/tf-idf", methods=['GET', 'POST'])
+def tf_idf():
+    if request.method == 'POST':
+        query = request.form['query']
+        ranking = tf_idf_model.compute_ranking(query)
+        count = len(ranking)
+        print(ranking) 
         return render_template('boolean_results.html', content=[query, ranking, count])
 
     else:
@@ -82,5 +95,6 @@ if __name__ == "__main__":
 
     # BOOLEAN MODEL
     boolean_model = IR_Boolean(corpus_med)
+    tf_idf_model = IR_TF_IDF(corpus_med)
 
     app.run(debug=True)

@@ -45,6 +45,7 @@ class IRSystem():
         self.ranking_query[query_id] = ranking
         for doc, score in ranking:
             print("[ Score = " + "%.3f" % round(score, 3) + "] " + corpus[doc])
+        return ranking
 
     def create_query_vector(self, query, dictionary: corpora.Dictionary):
         pquery = self.preprocess_document(query)
@@ -74,7 +75,11 @@ class IR_TF_IDF(IRSystem):
     def __init__(self, corpus, queries) -> None:
         super().__init__(corpus, queries)
         self.ranking_query = dict()
-        self.initialize_model(corpus, queries, 1)
+        # self.initialize_model(corpus, queries, 1)
+
+    def compute_ranking(self, query):
+        ranking = self.initialize_model(self.corpus, query, 1)
+        return ranking
 
 
 class IR_Boolean(IRSystem):
@@ -143,10 +148,12 @@ class IR_Boolean(IRSystem):
 
     def _compute_ranking(self, dict_matches: dict, count: int):
         ranking = []
+        doc_number = 1
         for key, value in dict_matches.items():
+            doc_number += 1
             if count == 0:
                 break
             if value == 1:
-                ranking.append((value, key))
+                ranking.append((value, key, doc_number))
                 count -= 1
         return ranking

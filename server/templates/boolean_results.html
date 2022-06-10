@@ -12,15 +12,11 @@
         {% for document in content[1] %}
             <div class="panel-heading">
                 <h2 class="panel-title">
-                    <span class="badge">#{{ document[0] }}</span>
-                    <p>Título: {{ document[1].title }}</p>
+                    <p>#{{ document[2] }}</p>
                 </h2>
             </div>
             <div class="panel-body">
-                <p>Texto: {{ document[1][0] }}</p>
-            </div>
-            <div class="panel-footer">
-                <p>Autor(es): {{ document[1][1] }}</p>
+                <p>Documento: {{ document[1] }}</p>
             </div>
         {% endfor %}    
         </div>
