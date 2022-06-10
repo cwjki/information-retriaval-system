@@ -34,7 +34,7 @@ class IRSystem():
         return vectors
 
     def ranking_function(self, corpus, query, query_id, mode):
-        model, dictionary = self.create_dictionary(corpus)
+        model, dictionary = self.create_document_vector(corpus)
         loaded_corpus = corpora.MmCorpus('vsm_docs.mm')
         index = similarities.MatrixSimilarity(
             loaded_corpus, num_features=len(dictionary))
@@ -43,23 +43,27 @@ class IRSystem():
         sim = index[self.query_weight]
         ranking = sorted(enumerate(sim), key=itemgetter(1), reverse=True)
         self.ranking_query[query_id] = ranking
-        for doc, score in ranking:
-            print("[ Score = " + "%.3f" % round(score, 3) + "] " + corpus[doc])
-        return ranking
+        result = []
+        for doc, score in ranking[:20]:
+            new_score = "%.3f" % round(score, 3)
+            result.append((new_score, corpus[doc], doc))
+            # print("[ Score = " + "%.3f" % round(score, 3) + "] " + corpus[doc])
+
+        return result
 
     def create_query_vector(self, query, dictionary: corpora.Dictionary):
         pquery = self.preprocess_document(query)
         vquery = dictionary.doc2bow(pquery)
         return vquery
 
-    def create_document_vector(self, corpus, model_id):
+    def create_document_vector(self, corpus, model_id=0):
         dictionary, pdocs = self.create_dictionary(corpus)
         vdocs = self.docs_to_bows(dictionary, pdocs)
         loaded_corpus = corpora.MmCorpus('vsm_docs.mm')
 
         model = models.TfidfModel(loaded_corpus)
 
-        return vdocs, model
+        return model, dictionary
 
     def initialize_model(self, corpus, queries, mode):
         query_id = 0
@@ -68,11 +72,11 @@ class IRSystem():
                 self.ranking_function(corpus, query, query_id, mode)
                 query_id += 1
         else:
-            self.ranking_function(corpus, queries, 1, mode)
+            return self.ranking_function(corpus, queries, 1, mode)
 
 
 class IR_TF_IDF(IRSystem):
-    def __init__(self, corpus, queries) -> None:
+    def __init__(self, corpus, queries=None) -> None:
         super().__init__(corpus, queries)
         self.ranking_query = dict()
         # self.initialize_model(corpus, queries, 1)

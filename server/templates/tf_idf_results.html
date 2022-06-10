@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %} SRI Results Page {% endblock %}
+{% block content %} 
+    <div class="container">
+        <div class="page-header">
+            <h1>Ranking de Documentos</h1>
+            <h2><small>Consulta: "{{ content[0] }}"</small></h2>
+            <h2><small>Cantidad de documentos recuperados: {{ content[2] }}</small></h2>
+        </div>
+
+        <div class="panel panel-primary">
+        {% for document in content[1] %}
+            <div class="panel-heading">
+                <h2 class="panel-title">
+                    <span class="badge">#{{ document[2] }}</span>
+                    <p>Peso: {{ document[0] }}</p>
+                </h2>
+            </div>
+            <div class="panel-body">
+                <p>Documento: {{ document[1] }}</p>
+            </div>
+        {% endfor %}    
+        </div>
+    </div>
+    
+    
+
+{% endblock %}

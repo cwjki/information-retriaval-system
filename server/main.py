@@ -68,8 +68,7 @@ def tf_idf():
         query = request.form['query']
         ranking = tf_idf_model.compute_ranking(query)
         count = len(ranking)
-        print(ranking) 
-        return render_template('boolean_results.html', content=[query, ranking, count])
+        return render_template('tf_idf_results.html', content=[query, ranking, count])
 
     else:
         return render_template('index.html')
