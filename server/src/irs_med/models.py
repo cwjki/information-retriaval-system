@@ -25,17 +25,17 @@ class IRSystem():
     def create_dictionary(self, documents):
         pdocs = [self.preprocess_document(doc) for doc in documents]
         dictionary = corpora.Dictionary(pdocs)
-        dictionary.save('/src/data/vsm.dict')
+        dictionary.save('src/data/vsm.dict')
         return dictionary, pdocs
 
     def docs_to_bows(self, dictionary: corpora.Dictionary, pdocs):
         vectors = [dictionary.doc2bow(doc) for doc in pdocs]
-        corpora.MmCorpus.serialize('/src/data/vsm_docs.mm', vectors)
+        corpora.MmCorpus.serialize('src/data/vsm_docs.mm', vectors)
         return vectors
 
     def ranking_function(self, corpus, query, query_id, mode):
         model, dictionary = self.create_document_vector(corpus)
-        loaded_corpus = corpora.MmCorpus('/src/data/vsm_docs.mm')
+        loaded_corpus = corpora.MmCorpus('src/data/vsm_docs.mm')
         index = similarities.MatrixSimilarity(
             loaded_corpus, num_features=len(dictionary))
         vquery = self.create_query_vector(query, dictionary)
@@ -57,7 +57,7 @@ class IRSystem():
     def create_document_vector(self, corpus, model_id=0):
         dictionary, pdocs = self.create_dictionary(corpus)
         vdocs = self.docs_to_bows(dictionary, pdocs)
-        loaded_corpus = corpora.MmCorpus('/src/data/vsm_docs.mm')
+        loaded_corpus = corpora.MmCorpus('src/data/vsm_docs.mm')
 
         model = models.TfidfModel(loaded_corpus)
 
