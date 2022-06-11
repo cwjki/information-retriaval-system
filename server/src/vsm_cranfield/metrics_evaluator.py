@@ -22,7 +22,12 @@ class Evaluator():
     def compute_metrics(self):
         for i, query in enumerate(self.cran_queries):
             query = self.cran_queries[i]
+
+            print(f'QUERY -> {query}')
+
             cran_relevant_indexes = self.cran_relevant_indexes[i]
+
+            print(f'RELEVANT INDEXES -> {cran_relevant_indexes}')
 
             # recuperar la misma cantidad de documetos que Cran
             # model_relevant_indexes = self.model.get_ranking_index(
@@ -30,6 +35,8 @@ class Evaluator():
 
             # recuperar la cantidad prefijada de documentos
             model_relevant_indexes = self.model.get_ranking_index(str(query))
+
+            print(f'MODEL RELEVANT INDEXES -> {model_relevant_indexes}')
 
             # print(
             #     f'CRAN {i} indices relevantes -> {len(cran_relevant_indexes)}')
@@ -49,7 +56,7 @@ class Evaluator():
                 cran_relevant_indexes, model_relevant_indexes))
 
     def compute_precission(self, cran_relevant_indexes: List[int], model_relevant_indexes: List[int]) -> float:
-        if len(cran_relevant_indexes) == 0:
+        if (len(cran_relevant_indexes) == 0) or (len(model_relevant_indexes) == 0):
             return 0
 
         cran_set = set(cran_relevant_indexes)
@@ -65,7 +72,7 @@ class Evaluator():
         return len(rr) / (len(rr) + len(ri))
 
     def compute_recall(self, cran_relevant_indexes: List[int], model_relevant_indexes: List[int]) -> float:
-        if len(cran_relevant_indexes) == 0:
+        if (len(cran_relevant_indexes) == 0) or (len(model_relevant_indexes) == 0):
             return 0
 
         cran_set = set(cran_relevant_indexes)

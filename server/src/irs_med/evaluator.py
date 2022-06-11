@@ -12,7 +12,7 @@ class IREvaluator():
     def compute_metrics(self, ranking_query):
         query_id = 1
         if len(ranking_query) > 1:
-            for query in ranking_query-1:
+            for query in ranking_query:
                 q_relevants_docs = self.get_total_relevant_docs(query_id)
 
                 ranking_query[query] = [ranking_query[query][i] for i in range(

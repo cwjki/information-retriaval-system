@@ -91,6 +91,13 @@ class IR_Boolean(IRSystem):
         super().__init__(corpus, queries)
         self.ranking_query = dict()
 
+    def get_ranking_index(self, query: str, ranking_count=20):
+        ranking = self.compute_ranking(query, ranking_count)
+        print(ranking)
+        indexes = [index for _, index, _ in ranking]
+        print(indexes)
+        return indexes
+
     def compute_ranking(self, queries, count=20):
         query_id = 0
         if isinstance(queries, list):

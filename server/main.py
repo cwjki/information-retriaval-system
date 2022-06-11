@@ -1,5 +1,4 @@
 from pathlib import Path
-from pickle import TRUE
 from traceback import print_tb
 from flask import Flask, request, render_template
 from flask_bootstrap import Bootstrap
@@ -8,7 +7,7 @@ from src.vsm_cranfield.vector_space_model import VectorSpaceModel
 from src.vsm_cranfield.cranfield_parser import CranfieldParser
 from src.utils import save_model, load_model
 from src.irs_med.models import IR_Boolean, IR_TF_IDF
-from src.irs_med.med_parser import med_parse_collection, med_parse_queries, med_parse_relevances
+from src.irs_med.med_parser import med_parse_collection, med_parse_rel
 from src.irs_med.evaluator import IREvaluator
 
 
@@ -105,8 +104,8 @@ if __name__ == "__main__":
 
     # MED Collection
     corpus_med = med_parse_collection(MED_COLLECTION)
-    relevance_med = med_parse_relevances(MED_REL)
     queries_med = med_parse_collection(MED_QUERY)
+    relations_med = med_parse_rel(MED_REL)
 
     # VECTOR SPACE MODEL with CRANFIELD collection
     try:
@@ -126,17 +125,20 @@ if __name__ == "__main__":
 
     # BOOLEAN MODEL
     boolean_model = IR_Boolean(corpus_med)
-    tf_idf_model = IR_TF_IDF(corpus_med)
+
+    # BOOLEAN MODEL EVALUATOR
+    boolean_evaluator = Evaluator(
+        corpus_med, queries_med, relations_med, boolean_model)
+
 
     # COMPUTE ALL THE MED QUERIES
     try:
         boolean_metrics = load_model(BOOLEAN_METRICS)
     except OSError:
-        boolean_model.compute_ranking(queries_med[:3])
-        boolean_evaluator = IREvaluator(
-            relevance_med, boolean_model.ranking_query, True, 1)
         boolean_metrics = boolean_evaluator.evaluate()
         save_model(boolean_metrics, BOOLEAN_METRICS)
+
+    tf_idf_model = IR_TF_IDF(corpus_med)
 
     # tf_idf_model.compute_ranking(queries_med)
 

@@ -1,5 +1,5 @@
 import re
-import csv
+from collections import defaultdict
 
 
 def med_parse_collection(path):
@@ -19,15 +19,10 @@ def med_parse_queries(path):
         print("No such file or directory - MED COLLECTION")
 
 
-def process_queries(self, document):
-    lines = document.split('\n')
-    lines = list(map(lambda x: x.strip(), lines))
-
-
-def med_parse_relevances(path):
-    with open(path, 'rt') as csvfile:
-        spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
-        relevances = []
-        for row in spamreader:
-            relevances.append(row)
-    return relevances
+def med_parse_rel(file):
+    relations = defaultdict(lambda: list())
+    with open(file, 'r') as f:
+        for line in f.readlines():
+            query, _, document, _ = map(lambda x: int(float(x)), line.split())
+            relations[query-1].append(document-1)
+    return relations
