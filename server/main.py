@@ -133,8 +133,13 @@ if __name__ == "__main__":
     try:
         boolean_ranking_queries = load_model(BOOLEAN_RK)
     except OSError:
-        boolean_model.compute_ranking(queries_med)
+        print("AQUI")
+        aux_queries = queries_med[:2]
+        print(aux_queries)
+        boolean_model.compute_ranking(aux_queries)
+        print("SALIO")
         boolean_ranking_queries = boolean_model.ranking_query
+        print(boolean_ranking_queries)
         save_model(boolean_ranking_queries, BOOLEAN_RK)
 
     # MED BOOLEAN EVAL
