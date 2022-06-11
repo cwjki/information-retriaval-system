@@ -26,8 +26,7 @@ CRAN_QREL = str(path) + '/src/collections/cranfield_collection/cranqrel'
 VSM_DIR = str(path) + '/src/data/vsm.vsm'
 
 VSM_METRICS = str(path) + '/src/data/vsm.metrics'
-
-BOOLEAN_RK = str(path) + '/src/data/boolean.rk'
+BOOLEAN_METRICS = str(path) + '/src/data/boolean.metrics'
 
 
 app = Flask(__name__)
@@ -60,13 +59,13 @@ def evaluate():
     # tf_idf_model.compute_ranking(queries_med)
 
     # MED BOOLEAN EVAL
-    boolean_evaluator = IREvaluator(
-        relevance_med, boolean_ranking_queries, True, 1)
+    # boolean_evaluator = IREvaluator(
+    #     relevance_med, boolean_ranking_queries, True, 1)
     # tf_idf_evaluator = IREvaluator(
     #     relevance_med, tf_idf_model.ranking_query, True, 1)
 
     # # vsm_metrics = evaluator.evaluate()
-    boolean_metrics = boolean_evaluator.evaluate()
+    # boolean_metrics = boolean_evaluator.evaluate()
     # tf_idf_metrics = tf_idf_evaluator.evaluate()
 
     return render_template('evaluate.html', content=[vsm_metrics, boolean_metrics])
@@ -131,20 +130,13 @@ if __name__ == "__main__":
 
     # COMPUTE ALL THE MED QUERIES
     try:
-        boolean_ranking_queries = load_model(BOOLEAN_RK)
+        boolean_metrics = load_model(BOOLEAN_METRICS)
     except OSError:
-        print("AQUI")
-        aux_queries = queries_med[:2]
-        print(aux_queries)
-        boolean_model.compute_ranking(aux_queries)
-        print("SALIO")
-        boolean_ranking_queries = boolean_model.ranking_query
-        print(boolean_ranking_queries)
-        save_model(boolean_ranking_queries, BOOLEAN_RK)
-
-    # MED BOOLEAN EVAL
-    boolean_evaluator = IREvaluator(
-        relevance_med, boolean_model.ranking_query, True, 1)
+        boolean_model.compute_ranking(queries_med[:3])
+        boolean_evaluator = IREvaluator(
+            relevance_med, boolean_model.ranking_query, True, 1)
+        boolean_metrics = boolean_evaluator.evaluate()
+        save_model(boolean_metrics, BOOLEAN_METRICS)
 
     # tf_idf_model.compute_ranking(queries_med)
 
@@ -155,7 +147,7 @@ if __name__ == "__main__":
     #     relevance_med, tf_idf_model.ranking_query, True, 1)
 
     # # vsm_metrics = evaluator.evaluate()
-    # boolean_metrics = boolean_evaluator.evaluate(boolean_model.ranking_query)
+    # boolean_metrics = boolean_evaluator.evaluate()
     # tf_idf_metrics = tf_idf_evaluator.evaluate()
 
     app.run(debug=True)
