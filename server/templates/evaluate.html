@@ -3,56 +3,46 @@
 {% block content %} 
 
     <div class="container">
-         <div class="page-header">
-            <h2>MEDIDAS DE EVALUACIÓN</h2>
-            <h2><small>Precisión: {{content[0][0]}}</small></h2>
-            <h2><small>Recobrado: {{ content[0][1]}}</small></h2>
-            <h2><small>Medida F1: {{ content[0][2]}}</small></h2>
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading"><p class="text-center">MODELO BOOLEANO</p></div>
+            <!-- Table -->
+            <table class="table table-bordered">
+                <tr>
+                    <th><p class="text-center">Precisión</p></th>
+                    <th><p class="text-center">Recobrado</p></th>
+                    <th><p class="text-center">Medida F1</p></th>
+                </tr>
+                <tr>
+                    <td><p class="text-center">{{ content[1][0] }}</p></td>
+                    <td><p class="text-center">{{ content[1][1] }}</p></td>
+                    <td><p class="text-center">{{ content[1][2] }}</p></td>
+                </tr>
+            </table>
         </div>
     </div>
 
     <div class="container">
         <div class="panel panel-default">
-        <!-- Default panel contents -->
-        <div class="panel-heading">VSM</div>
-
-        <!-- Table -->
-        <table class="table">
-            <tr>
-                <th>Precisión</th>
-                <th>Recobrado</th>
-                <th>Medida F1</th>
-            </tr>
-            <tr>
-                <td>{{ content[0][0] }}</td>
-                <td>{{ content[0][1] }}</td>
-                <td>{{ content[0][2] }}</td>
-            </tr>
-        </table>
+            <!-- Default panel contents -->
+            <div class="panel-heading"><p class="text-center">MODELO VECTORIAL</p></div>
+            <!-- Table -->
+            <table class="table table-bordered">
+                <tr>
+                    <th><p class="text-center">Precisión</p></th>
+                    <th><p class="text-center">Recobrado</p></th>
+                    <th><p class="text-center">Medida F1</p></th>
+                </tr>
+                <tr>
+                    <td><p class="text-center">{{ content[0][0] }}</p></td>
+                    <td><p class="text-center">{{ content[0][1] }}</p></td>
+                    <td><p class="text-center">{{ content[0][2] }}</p></td>
+                </tr>
+            </table>
+        </div>
     </div>
+    
 
-    <div class="container">
-        <div class="panel panel-default">
-        <!-- Default panel contents -->
-        <div class="panel-heading">BOOLEAN</div>
-
-        <!-- Table -->
-        <table class="table">
-            <tr>
-                <th>Precisión</th>
-                <th>Recobrado</th>
-                <th>Medida F1</th>
-            </tr>
-            <tr>
-                <td>{{ content[1][0] }}</td>
-                <td>{{ content[1][1] }}</td>
-                <td>{{ content[1][2] }}</td>
-            </tr>
-        </table>
-    </div>
-
-
-    </div>
     
 
 {% endblock %}
