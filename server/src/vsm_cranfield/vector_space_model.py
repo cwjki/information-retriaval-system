@@ -77,21 +77,21 @@ class VectorSpaceModel:
             scores.append((score, index))
 
         sorted_scores = sorted(scores, reverse=True)
-        # print(sorted_scores)
-        index_ranking = []
-        for i in range(ranking_count):
-            index_ranking.append(sorted_scores[i][1])
+        # index_ranking = []
+        # for i in range(ranking_count):
+        #     index_ranking.append(sorted_scores[i][1])
 
-        # print(index_ranking)
-        ranking = []
-        for index in index_ranking:
-            ranking.append((index, self.dataset[index]))
-
+        # # print(index_ranking)
+        # ranking = []
+        # for index in index_ranking:
+        #     ranking.append((index, self.dataset[index]))
+        ranking = [(index, self.dataset[index], score)
+                   for score, index in sorted_scores[:RANKING_COUNT] if score > 0.12]
         return ranking
 
     def get_ranking_index(self, query: str, ranking_count=RANKING_COUNT):
         ranking = self.compute_ranking(query, ranking_count)
-        indexes = [index for index, _ in ranking]
+        indexes = [index for index, _, _ in ranking]
         return indexes
 
     def compute_dot_product(self, query_vector, document_vector):
@@ -109,6 +109,3 @@ class VectorSpaceModel:
         for term, weight in vector.items():
             result += (weight ** 2)
         return sqrt(result)
-
-
-
