@@ -4,6 +4,7 @@ from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 from nltk.tokenize import wordpunct_tokenize
 from gensim import corpora, models, similarities
+import numpy as np
 
 
 class IRSystem():
@@ -12,6 +13,7 @@ class IRSystem():
         self.queries = queries
         self.query_weight = []
         self.ranking_query = []
+        self.model_id = 0
 
     def preprocess_document(self, document):
         stopset = set(stopwords.words())
@@ -33,19 +35,24 @@ class IRSystem():
         corpora.MmCorpus.serialize('src/data/vsm_docs.mm', vectors)
         return vectors
 
-    def ranking_function(self, corpus, query, query_id, mode):
+    def ranking_function(self, corpus, query, query_id, mode, ranking_count):
         model, dictionary = self.create_document_vector(corpus)
         loaded_corpus = corpora.MmCorpus('src/data/vsm_docs.mm')
         index = similarities.MatrixSimilarity(
             loaded_corpus, num_features=len(dictionary))
+
         vquery = self.create_query_vector(query, dictionary)
-        print(vquery)
-        self.query_weight = model[vquery]
+        if self.model_id == 1:
+            self.query_weight = [(w[0], 1 + np.log2(w[1])) for w in vquery]
+        else:
+            self.query_weight = model[vquery]
+
         sim = index[self.query_weight]
         ranking = sorted(enumerate(sim), key=itemgetter(1), reverse=True)
         self.ranking_query[query_id] = ranking
+
         result = []
-        for doc, score in ranking[:20]:
+        for doc, score in ranking[:ranking_count]:
             new_score = "%.3f" % round(score, 3)
             result.append((new_score, corpus[doc], doc))
         return result
@@ -60,30 +67,56 @@ class IRSystem():
         vdocs = self.docs_to_bows(dictionary, pdocs)
         loaded_corpus = corpora.MmCorpus('src/data/vsm_docs.mm')
 
-        model = models.TfidfModel(loaded_corpus)
+        if self.model_id == 1:      # TF model
+            model = [[(w[0], 1 + np.log2(w[1])) for w in v]
+                     for v in vdocs]
+        elif self.model_id == 2:    # TF IDF MODEL
+            model = models.TfidfModel(loaded_corpus)
+        elif self.model_id == 3:    # TF IDF MODEL
+            model = models.LdaModel(loaded_corpus)
 
         return model, dictionary
 
-    def initialize_model(self, corpus, queries, mode):
+    def initialize_model(self, corpus, queries, mode, ranking_count):
         query_id = 0
         if isinstance(queries, list):
             for query in queries:
                 print(query)
-                self.ranking_function(corpus, query, query_id, mode)
+                self.ranking_function(
+                    corpus, query, query_id, mode, ranking_count)
                 query_id += 1
         else:
-            return self.ranking_function(corpus, queries, 1, mode)
+            return self.ranking_function(corpus, queries, 1, mode, ranking_count)
+
+    def get_ranking_index(self, query: str, ranking_count=20):
+        ranking = self.compute_ranking(query, ranking_count)
+        indexes = [index for _, _, index in ranking]
+        return indexes
+
+    def compute_ranking(self, query, ranking_count=20):
+        ranking = self.initialize_model(self.corpus, query, 1, ranking_count)
+        return ranking
+
+
+class IR_TF(IRSystem):
+    def __init__(self, corpus, queries=None) -> None:
+        super().__init__(corpus, queries)
+        self.ranking_query = dict()
+        self.model_id = 1
 
 
 class IR_TF_IDF(IRSystem):
     def __init__(self, corpus, queries=None) -> None:
         super().__init__(corpus, queries)
         self.ranking_query = dict()
-        # self.initialize_model(corpus, queries, 1)
+        self.model_id = 2
 
-    def compute_ranking(self, query):
-        ranking = self.initialize_model(self.corpus, query, 1)
-        return ranking
+
+class IR_LDA(IRSystem):
+    def __init__(self, corpus, queries=None) -> None:
+        super().__init__(corpus, queries)
+        self.ranking_function = dict()
+        self.model_id = 3
 
 
 class IR_Boolean(IRSystem):
@@ -93,9 +126,7 @@ class IR_Boolean(IRSystem):
 
     def get_ranking_index(self, query: str, ranking_count=20):
         ranking = self.compute_ranking(query, ranking_count)
-        print(ranking)
         indexes = [index for _, index, _ in ranking]
-        print(indexes)
         return indexes
 
     def compute_ranking(self, queries, count=20):

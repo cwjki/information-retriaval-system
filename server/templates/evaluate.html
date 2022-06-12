@@ -2,25 +2,7 @@
 {% block title %} SRI Evaluation Page {% endblock %}
 {% block content %} 
 
-    <div class="container">
-        <div class="panel panel-default">
-            <!-- Default panel contents -->
-            <div class="panel-heading"><p class="text-center">MODELO BOOLEANO</p></div>
-            <!-- Table -->
-            <table class="table table-bordered">
-                <tr>
-                    <th><p class="text-center">Precisión</p></th>
-                    <th><p class="text-center">Recobrado</p></th>
-                    <th><p class="text-center">Medida F1</p></th>
-                </tr>
-                <tr>
-                    <td><p class="text-center">{{ content[1][0] }}</p></td>
-                    <td><p class="text-center">{{ content[1][1] }}</p></td>
-                    <td><p class="text-center">{{ content[1][2] }}</p></td>
-                </tr>
-            </table>
-        </div>
-    </div>
+    
 
     <div class="container">
         <div class="panel panel-default">
@@ -42,6 +24,66 @@
         </div>
     </div>
     
+    <div class="container">
+            <div class="panel panel-default">
+                <!-- Default panel contents -->
+                <div class="panel-heading"><p class="text-center">MODELO BOOLEANO</p></div>
+                <!-- Table -->
+                <table class="table table-bordered">
+                    <tr>
+                        <th><p class="text-center">Precisión</p></th>
+                        <th><p class="text-center">Recobrado</p></th>
+                        <th><p class="text-center">Medida F1</p></th>
+                    </tr>
+                    <tr>
+                        <td><p class="text-center">{{ content[1][0] }}</p></td>
+                        <td><p class="text-center">{{ content[1][1] }}</p></td>
+                        <td><p class="text-center">{{ content[1][2] }}</p></td>
+                    </tr>
+                </table>
+            </div>
+    </div>
+
+
+    <div class="container">
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading"><p class="text-center">MODELO TF</p></div>
+            <!-- Table -->
+            <table class="table table-bordered">
+                <tr>
+                    <th><p class="text-center">Precisión</p></th>
+                    <th><p class="text-center">Recobrado</p></th>
+                    <th><p class="text-center">Medida F1</p></th>
+                </tr>
+                <tr>
+                    <td><p class="text-center">{{ content[2][0] }}</p></td>
+                    <td><p class="text-center">{{ content[2][1] }}</p></td>
+                    <td><p class="text-center">{{ content[2][2] }}</p></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading"><p class="text-center">MODELO TF*IDF</p></div>
+            <!-- Table -->
+            <table class="table table-bordered">
+                <tr>
+                    <th><p class="text-center">Precisión</p></th>
+                    <th><p class="text-center">Recobrado</p></th>
+                    <th><p class="text-center">Medida F1</p></th>
+                </tr>
+                <tr>
+                    <td><p class="text-center">{{ content[3][0] }}</p></td>
+                    <td><p class="text-center">{{ content[3][1] }}</p></td>
+                    <td><p class="text-center">{{ content[3][2] }}</p></td>
+                </tr>
+            </table>
+        </div>
+    </div>
 
     
 

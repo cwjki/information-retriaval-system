@@ -6,7 +6,7 @@ from src.vsm_cranfield.metrics_evaluator import Evaluator
 from src.vsm_cranfield.vector_space_model import VectorSpaceModel
 from src.vsm_cranfield.cranfield_parser import CranfieldParser
 from src.utils import save_model, load_model
-from src.irs_med.models import IR_Boolean, IR_TF_IDF
+from src.irs_med.models import IR_TF, IR_Boolean, IR_TF_IDF
 from src.irs_med.med_parser import med_parse_collection, med_parse_rel
 from src.irs_med.evaluator import IREvaluator
 
@@ -26,6 +26,8 @@ VSM_DIR = str(path) + '/src/data/vsm.vsm'
 
 VSM_METRICS = str(path) + '/src/data/vsm.metrics'
 BOOLEAN_METRICS = str(path) + '/src/data/boolean.metrics'
+TF_METRICS = str(path) + '/src/data/tf.metrics'
+TF_IDF_METRICS = str(path) + '/src/data/tf_idf.metrics'
 
 
 app = Flask(__name__)
@@ -50,24 +52,7 @@ def vsm():
 
 @app.route("/evaluate", methods=['GET'])
 def evaluate():
-    # CRANFIELD VSM EVAL
-    # evaluator = Evaluator(documents, queries, relations, vector_space_model)
-
-    # # COMPUTE ALL THE MED QUERIES
-    # boolean_model.compute_ranking(queries_med)
-    # tf_idf_model.compute_ranking(queries_med)
-
-    # MED BOOLEAN EVAL
-    # boolean_evaluator = IREvaluator(
-    #     relevance_med, boolean_ranking_queries, True, 1)
-    # tf_idf_evaluator = IREvaluator(
-    #     relevance_med, tf_idf_model.ranking_query, True, 1)
-
-    # # vsm_metrics = evaluator.evaluate()
-    # boolean_metrics = boolean_evaluator.evaluate()
-    # tf_idf_metrics = tf_idf_evaluator.evaluate()
-
-    return render_template('evaluate.html', content=[vsm_metrics, boolean_metrics])
+    return render_template('evaluate.html', content=[vsm_metrics, boolean_metrics, tf_metrics, tf_idf_metrics])
 
 
 @app.route("/boolean", methods=['GET', 'POST'])
@@ -129,27 +114,34 @@ if __name__ == "__main__":
     # BOOLEAN MODEL EVALUATOR
     boolean_evaluator = Evaluator(
         corpus_med, queries_med, relations_med, boolean_model)
-
-
-    # COMPUTE ALL THE MED QUERIES
     try:
         boolean_metrics = load_model(BOOLEAN_METRICS)
     except OSError:
         boolean_metrics = boolean_evaluator.evaluate()
         save_model(boolean_metrics, BOOLEAN_METRICS)
 
+    # TF MODEL
+    tf_model = IR_TF(corpus_med)
+
+    # TF MODEL EVALUATOR
+    tf_evaluator = Evaluator(
+        corpus_med, queries_med, relations_med, tf_model)
+    try:
+        tf_metrics = load_model(TF_METRICS)
+    except OSError:
+        tf_metrics = tf_evaluator.evaluate()
+        save_model(tf_metrics, TF_METRICS)
+
+    # TF IDF MODEL
     tf_idf_model = IR_TF_IDF(corpus_med)
 
-    # tf_idf_model.compute_ranking(queries_med)
-
-    # # MED BOOLEAN EVAL
-    # boolean_evaluator = IREvaluator(
-    #     relevance_med, boolean_model.ranking_query, True, 1)
-    # tf_idf_evaluator = IREvaluator(
-    #     relevance_med, tf_idf_model.ranking_query, True, 1)
-
-    # # vsm_metrics = evaluator.evaluate()
-    # boolean_metrics = boolean_evaluator.evaluate()
-    # tf_idf_metrics = tf_idf_evaluator.evaluate()
+    # TF IDF MODEL EVALUATOR
+    tf_idf_evaluator = Evaluator(
+        corpus_med, queries_med, relations_med, tf_idf_model)
+    try:
+        tf_idf_metrics = load_model(TF_IDF_METRICS)
+    except OSError:
+        tf_idf_metrics = tf_idf_evaluator.evaluate()
+        save_model(tf_idf_metrics, TF_IDF_METRICS)
 
     app.run(debug=True)
