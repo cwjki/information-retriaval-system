@@ -35,7 +35,7 @@ class IRSystem():
         corpora.MmCorpus.serialize('src/data/vsm_docs.mm', vectors)
         return vectors
 
-    def ranking_function(self, corpus, query, query_id, mode, ranking_count):
+    def ranking_function(self, corpus, query, query_id, ranking_count):
         model, dictionary = self.create_document_vector(corpus)
         loaded_corpus = corpora.MmCorpus('src/data/vsm_docs.mm')
         index = similarities.MatrixSimilarity(
@@ -62,7 +62,7 @@ class IRSystem():
         vquery = dictionary.doc2bow(pquery)
         return vquery
 
-    def create_document_vector(self, corpus, model_id=0):
+    def create_document_vector(self, corpus):
         dictionary, pdocs = self.create_dictionary(corpus)
         vdocs = self.docs_to_bows(dictionary, pdocs)
         loaded_corpus = corpora.MmCorpus('src/data/vsm_docs.mm')
@@ -78,16 +78,16 @@ class IRSystem():
 
         return model, dictionary
 
-    def initialize_model(self, corpus, queries, mode, ranking_count):
+    def initialize_model(self, corpus, queries, ranking_count):
         query_id = 0
         if isinstance(queries, list):
             for query in queries:
                 print(query)
                 self.ranking_function(
-                    corpus, query, query_id, mode, ranking_count)
+                    corpus, query, query_id, ranking_count)
                 query_id += 1
         else:
-            return self.ranking_function(corpus, queries, 1, mode, ranking_count)
+            return self.ranking_function(corpus, queries, 1, ranking_count)
 
     def get_ranking_index(self, query: str, ranking_count=20):
         ranking = self.compute_ranking(query, ranking_count)
@@ -95,7 +95,7 @@ class IRSystem():
         return indexes
 
     def compute_ranking(self, query, ranking_count=20):
-        ranking = self.initialize_model(self.corpus, query, 1, ranking_count)
+        ranking = self.initialize_model(self.corpus, query, ranking_count)
         return ranking
 
 

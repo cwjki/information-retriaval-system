@@ -71,11 +71,35 @@ def boolean():
         return render_template('index.html')
 
 
+@app.route("/tf", methods=['GET', 'POST'])
+def tf():
+    if request.method == 'POST':
+        query = request.form['query']
+        ranking = tf_model.compute_ranking(query)
+        count = len(ranking)
+        return render_template('tf_idf_results.html', content=[query, ranking, count])
+
+    else:
+        return render_template('index.html')
+
+
 @app.route("/tf-idf", methods=['GET', 'POST'])
 def tf_idf():
     if request.method == 'POST':
         query = request.form['query']
         ranking = tf_idf_model.compute_ranking(query)
+        count = len(ranking)
+        return render_template('tf_idf_results.html', content=[query, ranking, count])
+
+    else:
+        return render_template('index.html')
+
+
+@app.route("/lem", methods=['GET', 'POST'])
+def lem():
+    if request.method == 'POST':
+        query = request.form['query']
+        ranking = lem_model.compute_ranking(query)
         count = len(ranking)
         return render_template('tf_idf_results.html', content=[query, ranking, count])
 
