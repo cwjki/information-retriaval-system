@@ -6,7 +6,7 @@ from src.vsm_cranfield.metrics_evaluator import Evaluator
 from src.vsm_cranfield.vector_space_model import VectorSpaceModel
 from src.vsm_cranfield.cranfield_parser import CranfieldParser
 from src.utils import save_model, load_model
-from src.irs_med.models import IR_LDA, IR_TF, IR_Boolean, IR_TF_IDF
+from src.irs_med.models import IR_LDA, IR_LDA_MULTICORE, IR_LEM, IR_LGM, IR_LSI, IR_PR, IR_RP, IR_TF, IR_Boolean, IR_TF_IDF
 from src.irs_med.med_parser import med_parse_collection, med_parse_rel
 from src.irs_med.evaluator import IREvaluator
 
@@ -29,6 +29,10 @@ BOOLEAN_METRICS = str(path) + '/src/data/boolean.metrics'
 TF_METRICS = str(path) + '/src/data/tf.metrics'
 TF_IDF_METRICS = str(path) + '/src/data/tf_idf.metrics'
 LDA_METRICS = str(path) + '/src/data/lda.metrics'
+LDA_MULTICORE_METRICS = str(path) + '/src/data/lda_multicore.metrics'
+LSI_METRICS = str(path) + '/src/data/lsi.metrics'
+RP_METRICS = str(path) + '/src/data/rp.metrics'
+LEM_METRICS = str(path) + '/src/data/lem.metrics'
 
 
 app = Flask(__name__)
@@ -58,7 +62,11 @@ def evaluate():
                                     boolean_metrics,
                                     tf_metrics,
                                     tf_idf_metrics,
-                                    lda_metrics])
+                                    lda_metrics,
+                                    lda_multicore_metrics,
+                                    lsi_metrics,
+                                    rp_metrics,
+                                    lem_metrics])
 
 
 @app.route("/boolean", methods=['GET', 'POST'])
@@ -166,5 +174,59 @@ if __name__ == "__main__":
     except OSError:
         lda_metrics = lda_evaluator.evaluate()
         save_model(lda_metrics, LDA_METRICS)
+
+# ---------------------------------------------------------------------------------------
+    # LDA MULTICORE MODEL
+    lda_multicore_model = IR_LDA_MULTICORE(corpus_med)
+
+    # LDA MULTICORE MODEL EVALUATOR
+    lda_multicore_evaluator = Evaluator(
+        corpus_med, queries_med, relations_med, lda_multicore_model)
+    try:
+        lda_multicore_metrics = load_model(LDA_MULTICORE_METRICS)
+    except OSError:
+        lda_multicore_metrics = lda_evaluator.evaluate()
+        save_model(lda_multicore_metrics, LDA_MULTICORE_METRICS)
+
+
+# ---------------------------------------------------------------------------------------
+    # LSI MODEL
+    lsi_model = IR_LSI(corpus_med)
+
+    # LSI MODEL EVALUATOR
+    lsi_evaluator = Evaluator(
+        corpus_med, queries_med, relations_med, lsi_model)
+    try:
+        lsi_metrics = load_model(LSI_METRICS)
+    except OSError:
+        lsi_metrics = lsi_evaluator.evaluate()
+        save_model(lsi_metrics, LSI_METRICS)
+
+
+# ---------------------------------------------------------------------------------------
+    # RP MODEL
+    rp_model = IR_RP(corpus_med)
+
+    # RP MODEL EVALUATOR
+    rp_evaluator = Evaluator(
+        corpus_med, queries_med, relations_med, rp_model)
+    try:
+        rp_metrics = load_model(RP_METRICS)
+    except OSError:
+        rp_metrics = rp_evaluator.evaluate()
+        save_model(rp_metrics, RP_METRICS)
+
+# ---------------------------------------------------------------------------------------
+    # LEM MODEL
+    lem_model = IR_LEM(corpus_med)
+
+    # LDA MODEL EVALUATOR
+    lem_evaluator = Evaluator(
+        corpus_med, queries_med, relations_med, lem_model)
+    try:
+        lem_metrics = load_model(LEM_METRICS)
+    except OSError:
+        lem_metrics = lem_evaluator.evaluate()
+        save_model(lem_metrics, LEM_METRICS)
 
     app.run(debug=True)
