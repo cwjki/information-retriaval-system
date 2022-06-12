@@ -72,15 +72,7 @@ class IRSystem():
                      for v in vdocs]
         elif self.model_id == 2:    # TF IDF MODEL
             model = models.TfidfModel(loaded_corpus)
-        elif self.model_id == 3:    # NORM MODEL
-            model = models.LdaModel(loaded_corpus)
-        elif self.model_id == 4:    # LDA Multicore model
-            model = models.LdaMulticore(loaded_corpus)
-        elif self.model_id == 5:  # LSI model
-            model = models.LsiModel(loaded_corpus)
-        elif self.model_id == 6:  # RP model
-            model = models.RpModel(loaded_corpus)
-        elif self.model_id == 7:  # LogEntropyModel model
+        elif self.model_id == 3:    # LogEntropyModel model
             model = models.LogEntropyModel(
                 loaded_corpus)
 
@@ -121,41 +113,11 @@ class IR_TF_IDF(IRSystem):
         self.model_id = 2
 
 
-class IR_LDA(IRSystem):
-    def __init__(self, corpus, queries=None) -> None:
-        super().__init__(corpus, queries)
-        self.ranking_query = dict()
-        self.model_id = 3
-
-
-class IR_LDA_MULTICORE(IRSystem):
-    def __init__(self, corpus, queries=None) -> None:
-        super().__init__(corpus, queries)
-        self.ranking_query = dict()
-        self.model_id = 4
-
-
-class IR_LSI(IRSystem):
-    def __init__(self, corpus, queries=None) -> None:
-        super().__init__(corpus, queries)
-        self.ranking_query = dict()
-        self.model_id = 5
-
-
-class IR_RP(IRSystem):
-    def __init__(self, corpus, queries=None) -> None:
-        super().__init__(corpus, queries)
-        self.ranking_query = dict()
-        self.model_id = 6
-
 class IR_LEM(IRSystem):
     def __init__(self, corpus, queries=None) -> None:
         super().__init__(corpus, queries)
         self.ranking_query = dict()
-        self.model_id = 7
-
-
-
+        self.model_id = 3
 
 
 class IR_Boolean(IRSystem):
