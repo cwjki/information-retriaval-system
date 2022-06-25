@@ -26,7 +26,9 @@ VSM_CRAN_METRICS = str(path) + '/src/data/vsm.metrics'
 VSM_MED_DIR = str(path) + '/src/data/vsm_med.vsm'
 VSM_MED_METRICS = str(path) + '/src/data/vsm_med.metrics'
 
-BOOLEAN_METRICS = str(path) + '/src/data/boolean.metrics'
+BOOLEAN_METRICS_MED = str(path) + '/src/data/boolean.metrics.med'
+BOOLEAN_METRICS_CRAN = str(path) + '/src/data/boolean.metrics.cran'
+
 TF_METRICS = str(path) + '/src/data/tf.metrics'
 TF_IDF_METRICS = str(path) + '/src/data/tf_idf.metrics'
 LEM_METRICS = str(path) + '/src/data/lem.metrics'
@@ -68,17 +70,30 @@ def evaluate():
     return render_template('evaluate.html',
                            content=[vsm_cran_metrics,
                                     vsm_med_metrics,
-                                    boolean_metrics,
+                                    boolean_metrics_cran,
+                                    boolean_metrics_med,
                                     tf_metrics,
                                     tf_idf_metrics,
                                     lem_metrics])
 
 
-@app.route("/boolean", methods=['GET', 'POST'])
-def boolean():
+@app.route("/boolean-cran", methods=['GET', 'POST'])
+def boolean_cran():
     if request.method == 'POST':
         query = request.form['query']
-        ranking = boolean_model.compute_ranking(query)
+        ranking = boolean_model_cran.compute_ranking(query)
+        count = len(ranking)
+        return render_template('boolean_results.html', content=[query, ranking, count])
+
+    else:
+        return render_template('index.html')
+
+
+@app.route("/boolean-med", methods=['GET', 'POST'])
+def boolean_med():
+    if request.method == 'POST':
+        query = request.form['query']
+        ranking = boolean_model_med.compute_ranking(query)
         count = len(ranking)
         return render_template('boolean_results.html', content=[query, ranking, count])
 
@@ -128,12 +143,12 @@ if __name__ == "__main__":
     cranfieldParser = CranfieldParser()
 
     cranfield_documents = cranfieldParser.parse(CRAN_COLLECTION)
+    corpus_cranfield = [document.text for document in cranfield_documents]
     cranfield_queries = cranfieldParser.parse(CRAN_QUERY)
     cranfield_relations = cranfieldParser.parse_cranqrel(CRAN_QREL)
 
     # MED Collection
     vsm_med_documents = cranfieldParser.parse(MED_COLLECTION)
-
     corpus_med = med_parse_collection(MED_COLLECTION)
     queries_med = med_parse_collection(MED_QUERY)
     relations_med = med_parse_rel(MED_REL)
@@ -175,17 +190,30 @@ if __name__ == "__main__":
         save_model(vsm_med_metrics, VSM_MED_METRICS)
 
 # ---------------------------------------------------------------------------------------
-    # BOOLEAN MODEL
-    boolean_model = IR_Boolean(corpus_med)
+    # BOOLEAN MODEL with MED
+    boolean_model_med = IR_Boolean(corpus_med)
 
     # BOOLEAN MODEL EVALUATOR
-    boolean_evaluator = Evaluator(
-        corpus_med, queries_med, relations_med, boolean_model)
+    boolean_evaluator_med = Evaluator(
+        corpus_med, queries_med, relations_med, boolean_model_med)
     try:
-        boolean_metrics = load_model(BOOLEAN_METRICS)
+        boolean_metrics_med = load_model(BOOLEAN_METRICS_MED)
     except OSError:
-        boolean_metrics = boolean_evaluator.evaluate()
-        save_model(boolean_metrics, BOOLEAN_METRICS)
+        boolean_metrics_med = boolean_evaluator_med.evaluate()
+        save_model(boolean_metrics_med, BOOLEAN_METRICS_MED)
+
+# ---------------------------------------------------------------------------------------
+    # BOOLEAN MODEL with CRANFIELD
+    boolean_model_cran = IR_Boolean(corpus_cranfield)
+
+    # BOOLEAN MODEL EVALUATOR
+    boolean_evaluator_cran = Evaluator(
+        corpus_cranfield, cranfield_queries, cranfield_relations, boolean_model_cran)
+    try:
+        boolean_metrics_cran = load_model(BOOLEAN_METRICS_CRAN)
+    except OSError:
+        boolean_metrics_cran = boolean_evaluator_cran.evaluate()
+        save_model(boolean_metrics_cran, BOOLEAN_METRICS_CRAN)
 
 # ---------------------------------------------------------------------------------------
     # TF MODEL

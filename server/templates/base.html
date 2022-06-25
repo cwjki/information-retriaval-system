@@ -11,14 +11,44 @@
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="/vsm">VECTORIAL</a></li>
-        <li><a href="/boolean">BOOLEANO</a></li>
+      <!-- <ul class="nav navbar-nav navbar-right">
+        <li><a href="/vsm-cran">vsm-cran</a></li>
+        <li><a href="/vsm-med">vsm-med</a></li>
+        <li><a href="/boolean-cran">boolean-cran</a></li>
+        <li><a href="/boolean-med">boolean-med</a></li>
         <li><a href="/tf">TF</a></li>
         <li><a href="/tf-idf">TF-IDF</a></li>
         <li><a href="/lem">LEM</a></li>
         <li><a href="/evaluate">Evaluador</a></li> 
+      </ul> -->
+
+      <ul class="nav navbar-nav navbar-right">
+
+          <li role="presentation" class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                Cranfield <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a href="/vsm-cran">Vectorial</a></li>
+                <li><a href="/boolean-cran">Booleano</a></li>
+              </ul>
+          </li>
+
+          <li role="presentation" class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                Med <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a href="/vsm-med">Vectorial</a></li>
+                <li><a href="/boolean-med">Booleano</a></li>
+              </ul>
+          </li>
+
+          <li><a href="/evaluate">Evaluador</a></li> 
+
       </ul>
+
+
   </div><!-- /.container-fluid -->
 </nav>
 {% endblock %}
