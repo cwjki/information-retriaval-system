@@ -29,8 +29,12 @@ VSM_MED_METRICS = str(path) + '/src/data/vsm.metrics.med'
 BOOLEAN_METRICS_MED = str(path) + '/src/data/boolean.metrics.med'
 BOOLEAN_METRICS_CRAN = str(path) + '/src/data/boolean.metrics.cran'
 
-TF_METRICS = str(path) + '/src/data/tf.metrics'
+TF_METRICS_MED = str(path) + '/src/data/tf.metrics.med'
+TF_METRICS_CRAN = str(path) + '/src/data/tf.metrics.cran'
+
+
 TF_IDF_METRICS = str(path) + '/src/data/tf_idf.metrics'
+
 LEM_METRICS = str(path) + '/src/data/lem.metrics'
 
 
@@ -72,7 +76,8 @@ def evaluate():
                                     vsm_med_metrics,
                                     boolean_metrics_cran,
                                     boolean_metrics_med,
-                                    tf_metrics,
+                                    tf_metrics_cran,
+                                    tf_metrics_med,
                                     tf_idf_metrics,
                                     lem_metrics])
 
@@ -101,14 +106,24 @@ def boolean_med():
         return render_template('index.html')
 
 
-@app.route("/tf", methods=['GET', 'POST'])
-def tf():
+@app.route("/tf-cran", methods=['GET', 'POST'])
+def tf_cran():
     if request.method == 'POST':
         query = request.form['query']
-        ranking = tf_model.compute_ranking(query)
+        ranking = tf_model_cran.compute_ranking(query)
         count = len(ranking)
         return render_template('tf_idf_results.html', content=[query, ranking, count])
+    else:
+        return render_template('index.html')
 
+
+@app.route("/tf-med", methods=['GET', 'POST'])
+def tf_med():
+    if request.method == 'POST':
+        query = request.form['query']
+        ranking = tf_model_med.compute_ranking(query)
+        count = len(ranking)
+        return render_template('tf_idf_results.html', content=[query, ranking, count])
     else:
         return render_template('index.html')
 
@@ -190,19 +205,6 @@ if __name__ == "__main__":
         save_model(vsm_med_metrics, VSM_MED_METRICS)
 
 # ---------------------------------------------------------------------------------------
-    # BOOLEAN MODEL with MED
-    boolean_model_med = IR_Boolean(corpus_med)
-
-    # BOOLEAN MODEL EVALUATOR
-    boolean_evaluator_med = Evaluator(
-        corpus_med, queries_med, relations_med, boolean_model_med)
-    try:
-        boolean_metrics_med = load_model(BOOLEAN_METRICS_MED)
-    except OSError:
-        boolean_metrics_med = boolean_evaluator_med.evaluate()
-        save_model(boolean_metrics_med, BOOLEAN_METRICS_MED)
-
-# ---------------------------------------------------------------------------------------
     # BOOLEAN MODEL with CRANFIELD
     boolean_model_cran = IR_Boolean(corpus_cranfield)
 
@@ -216,20 +218,47 @@ if __name__ == "__main__":
         save_model(boolean_metrics_cran, BOOLEAN_METRICS_CRAN)
 
 # ---------------------------------------------------------------------------------------
-    # TF MODEL
-    tf_model = IR_TF(corpus_med)
+    # BOOLEAN MODEL with MED
+    boolean_model_med = IR_Boolean(corpus_med)
 
-    # TF MODEL EVALUATOR
-    tf_evaluator = Evaluator(
-        corpus_med, queries_med, relations_med, tf_model)
+    # BOOLEAN MODEL EVALUATOR
+    boolean_evaluator_med = Evaluator(
+        corpus_med, queries_med, relations_med, boolean_model_med)
     try:
-        tf_metrics = load_model(TF_METRICS)
+        boolean_metrics_med = load_model(BOOLEAN_METRICS_MED)
     except OSError:
-        tf_metrics = tf_evaluator.evaluate()
-        save_model(tf_metrics, TF_METRICS)
+        boolean_metrics_med = boolean_evaluator_med.evaluate()
+        save_model(boolean_metrics_med, BOOLEAN_METRICS_MED)
+
 
 # ---------------------------------------------------------------------------------------
-    # TF IDF MODEL
+    # TF MODEL with CRANFIELD
+    tf_model_cran = IR_TF(corpus_cranfield)
+
+    # TF MODEL EVALUATOR
+    tf_evaluator_cran = Evaluator(
+        corpus_cranfield, cranfield_queries, cranfield_relations, tf_model_cran)
+    try:
+        tf_metrics_cran = load_model(TF_METRICS_CRAN)
+    except OSError:
+        tf_metrics_cran = tf_evaluator_cran.evaluate()
+        save_model(tf_metrics_cran, TF_METRICS_CRAN)
+
+# ---------------------------------------------------------------------------------------
+    # TF MODEL with MED
+    tf_model_med = IR_TF(corpus_med)
+
+    # TF MODEL EVALUATOR
+    tf_evaluator_med = Evaluator(
+        corpus_med, queries_med, relations_med, tf_model_med)
+    try:
+        tf_metrics_med = load_model(TF_METRICS_MED)
+    except OSError:
+        tf_metrics_med = tf_evaluator_med.evaluate()
+        save_model(tf_metrics_med, TF_METRICS_MED)
+
+# ---------------------------------------------------------------------------------------
+    # TF IDF MODEL with CRANFIELD
     tf_idf_model = IR_TF_IDF(corpus_med)
 
     # TF IDF MODEL EVALUATOR
