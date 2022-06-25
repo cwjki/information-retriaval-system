@@ -2,7 +2,6 @@ from collections import defaultdict
 import re
 from typing import List
 
-from tomlkit import document
 from .dataset import Document
 
 
@@ -57,5 +56,3 @@ class CranfieldParser:
                 if relation <= 5:
                     relations[query-1].append(document-1)
         return relations
-
-    
