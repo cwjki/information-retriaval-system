@@ -20,11 +20,11 @@ CRAN_COLLECTION = str(
 CRAN_QUERY = str(path) + '/src/collections/cranfield_collection/cran.qry'
 CRAN_QREL = str(path) + '/src/collections/cranfield_collection/cranqrel'
 
-VSM_CRAN_DIR = str(path) + '/src/data/vsm.vsm'
-VSM_CRAN_METRICS = str(path) + '/src/data/vsm.metrics'
+VSM_CRAN_DIR = str(path) + '/src/data/vsm.vsm.cran'
+VSM_CRAN_METRICS = str(path) + '/src/data/vsm.metrics.cran'
 
-VSM_MED_DIR = str(path) + '/src/data/vsm_med.vsm'
-VSM_MED_METRICS = str(path) + '/src/data/vsm_med.metrics'
+VSM_MED_DIR = str(path) + '/src/data/vsm.vsm.med'
+VSM_MED_METRICS = str(path) + '/src/data/vsm.metrics.med'
 
 BOOLEAN_METRICS_MED = str(path) + '/src/data/boolean.metrics.med'
 BOOLEAN_METRICS_CRAN = str(path) + '/src/data/boolean.metrics.cran'
