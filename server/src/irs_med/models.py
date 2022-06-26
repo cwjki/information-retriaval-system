@@ -8,12 +8,20 @@ import numpy as np
 
 
 class IRSystem():
-    def __init__(self, corpus, queries=None) -> None:
+    def __init__(self, corpus, model_id) -> None:
         self.corpus = corpus
-        self.queries = queries
         self.query_weight = []
         self.ranking_query = []
-        self.model_id = 0
+        self.model_id = model_id
+        self.model, self.index, self.dictionary = self.compute_model_and_matrix(
+            corpus)
+
+    def compute_model_and_matrix(self, corpus):
+        model, dictionary = self.create_document_vector(corpus)
+        loaded_corpus = corpora.MmCorpus('src/data/vsm_docs.mm')
+        index = similarities.MatrixSimilarity(
+            loaded_corpus, num_features=len(dictionary))
+        return model, index, dictionary
 
     def preprocess_document(self, document):
         stopset = set(stopwords.words())
@@ -36,18 +44,13 @@ class IRSystem():
         return vectors
 
     def ranking_function(self, corpus, query, query_id, ranking_count):
-        model, dictionary = self.create_document_vector(corpus)
-        loaded_corpus = corpora.MmCorpus('src/data/vsm_docs.mm')
-        index = similarities.MatrixSimilarity(
-            loaded_corpus, num_features=len(dictionary))
-
-        vquery = self.create_query_vector(query, dictionary)
+        vquery = self.create_query_vector(query, self.dictionary)
         if self.model_id == 1:
             self.query_weight = [(w[0], 1 + np.log2(w[1])) for w in vquery]
         else:
-            self.query_weight = model[vquery]
+            self.query_weight = self.model[vquery]
 
-        sim = index[self.query_weight]
+        sim = self.index[self.query_weight]
         ranking = sorted(enumerate(sim), key=itemgetter(1), reverse=True)
         self.ranking_query[query_id] = ranking
 
@@ -120,9 +123,10 @@ class IR_LEM(IRSystem):
         self.model_id = 3
 
 
-class IR_Boolean(IRSystem):
+class IR_Boolean():
     def __init__(self, corpus, queries=None) -> None:
-        super().__init__(corpus, queries)
+        self.corpus = corpus
+        self.queries = queries
         self.ranking_query = dict()
 
     def get_ranking_index(self, query: str, ranking_count=20):

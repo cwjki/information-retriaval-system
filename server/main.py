@@ -27,19 +27,26 @@ VSM_CRAN_METRICS = str(path) + '/src/data/vsm.metrics.cran'
 VSM_MED_DIR = str(path) + '/src/data/vsm.vsm.med'
 VSM_MED_METRICS = str(path) + '/src/data/vsm.metrics.med'
 
-
 BOOLEAN_METRICS_MED = str(path) + '/src/data/boolean.metrics.med'
 BOOLEAN_METRICS_CRAN = str(path) + '/src/data/boolean.metrics.cran'
 
-TF_METRICS_MED = str(path) + '/src/data/tf.metrics.med'
+TF_MODEL_CRAN = str(path) + '/src/data/tf.model.cran'
 TF_METRICS_CRAN = str(path) + '/src/data/tf.metrics.cran'
 
+TF_MODEL_MED = str(path) + '/src/data/tf.model.med'
+TF_METRICS_MED = str(path) + '/src/data/tf.metrics.med'
 
-TF_IDF_METRICS_MED = str(path) + '/src/data/tf_idf.metrics.med'
+TF_IDF_MODEL_CRAN = str(path) + '/src/data/tf_idf.model.cran'
 TF_IDF_METRICS_CRAN = str(path) + '/src/data/tf_idf.metrics.cran'
 
-LEM_METRICS_MED = str(path) + '/src/data/lem.metrics.med'
+TF_IDF_MODEL_MED = str(path) + '/src/data/tf_idf.model.med'
+TF_IDF_METRICS_MED = str(path) + '/src/data/tf_idf.metrics.med'
+
+LEM_MODEL_CRAN = str(path) + '/src/data/lem.model.cran'
 LEM_METRICS_CRAN = str(path) + '/src/data/lem.metrics.cran'
+
+LEM_MODEL_MED = str(path) + '/src/data/lem.model.med'
+LEM_METRICS_MED = str(path) + '/src/data/lem.metrics.med'
 
 
 app = Flask(__name__)
@@ -257,7 +264,11 @@ if __name__ == "__main__":
 
 # ---------------------------------------------------------------------------------------
     # TF MODEL with CRANFIELD
-    tf_model_cran = IR_TF(corpus_cranfield)
+    try:
+        tf_model_cran = load_model(TF_MODEL_CRAN)
+    except OSError:
+        tf_model_cran = IR_TF(corpus_cranfield, 1)
+        save_model(tf_model_cran, TF_MODEL_CRAN)
 
     # TF MODEL EVALUATOR
     tf_evaluator_cran = Evaluator(
@@ -270,7 +281,11 @@ if __name__ == "__main__":
 
 # ---------------------------------------------------------------------------------------
     # TF MODEL with MED
-    tf_model_med = IR_TF(corpus_med)
+    try:
+        tf_model_med = load_model(TF_MODEL_MED)
+    except OSError:
+        tf_model_med = IR_TF(corpus_med, 1)
+        save_model(tf_model_med, TF_MODEL_MED)
 
     # TF MODEL EVALUATOR
     tf_evaluator_med = Evaluator(
@@ -283,7 +298,11 @@ if __name__ == "__main__":
 
 # ---------------------------------------------------------------------------------------
     # TF IDF MODEL with CRANFIELD
-    tf_idf_model_cran = IR_TF_IDF(corpus_cranfield)
+    try:
+        tf_idf_model_cran = load_model(TF_IDF_MODEL_CRAN)
+    except OSError:
+        tf_idf_model_cran = IR_TF_IDF(corpus_cranfield, 2)
+        save_model(tf_idf_model_cran, TF_IDF_MODEL_CRAN)
 
     # TF IDF MODEL EVALUATOR
     tf_idf_evaluator_cran = Evaluator(
@@ -296,7 +315,11 @@ if __name__ == "__main__":
 
 # ---------------------------------------------------------------------------------------
     # TF IDF MODEL with MED
-    tf_idf_model_med = IR_TF_IDF(corpus_med)
+    try:
+        tf_idf_model_med = load_model(TF_IDF_MODEL_MED)
+    except OSError:
+        tf_idf_model_med = IR_TF_IDF(corpus_med, 2)
+        save_model(tf_idf_model_med, TF_IDF_MODEL_MED)
 
     # TF IDF MODEL EVALUATOR
     tf_idf_evaluator_med = Evaluator(
@@ -309,7 +332,11 @@ if __name__ == "__main__":
 
 # ---------------------------------------------------------------------------------------
     # LEM MODEL with CRANFIELD
-    lem_model_cran = IR_LEM(corpus_cranfield)
+    try:
+        lem_model_cran = load_model(LEM_MODEL_CRAN)
+    except OSError:
+        lem_model_cran = IR_LEM(corpus_cranfield, 3)
+        save_model(lem_model_cran, LEM_MODEL_CRAN)
 
     # LDA MODEL EVALUATOR
     lem_evaluator_cran = Evaluator(
@@ -322,7 +349,11 @@ if __name__ == "__main__":
 
 # ---------------------------------------------------------------------------------------
     # LEM MODEL with MED
-    lem_model_med = IR_LEM(corpus_med)
+    try:
+        lem_model_med = load_model(LEM_MODEL_MED)
+    except OSError:
+        lem_model_med = IR_LEM(corpus_med, 3)
+        save_model(lem_model_med, LEM_MODEL_MED)
 
     # LDA MODEL EVALUATOR
     lem_evaluator_med = Evaluator(
