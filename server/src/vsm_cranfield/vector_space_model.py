@@ -34,7 +34,7 @@ class VectorSpaceModel:
         return tf * idf
 
     def compute_query_weight(self, term: str, frequency: float, max_frequency: float) -> float:
-        tf = (ALPHA + (1 - ALPHA) * frequency) / max_frequency
+        tf = ALPHA + ((1 - ALPHA) * (frequency / max_frequency))
         idf = self.compute_idf(term)
         return tf * idf
 
@@ -86,7 +86,7 @@ class VectorSpaceModel:
         # for index in index_ranking:
         #     ranking.append((index, self.dataset[index]))
         ranking = [(index, self.dataset[index], score)
-                   for score, index in sorted_scores[:RANKING_COUNT] if score > 0.12]
+                   for score, index in sorted_scores[:RANKING_COUNT] if score > 0.125]
         return ranking
 
     def get_ranking_index(self, query: str, ranking_count=RANKING_COUNT):

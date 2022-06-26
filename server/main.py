@@ -23,8 +23,10 @@ CRAN_QREL = str(path) + '/src/collections/cranfield_collection/cranqrel'
 VSM_CRAN_DIR = str(path) + '/src/data/vsm.vsm.cran'
 VSM_CRAN_METRICS = str(path) + '/src/data/vsm.metrics.cran'
 
+
 VSM_MED_DIR = str(path) + '/src/data/vsm.vsm.med'
 VSM_MED_METRICS = str(path) + '/src/data/vsm.metrics.med'
+
 
 BOOLEAN_METRICS_MED = str(path) + '/src/data/boolean.metrics.med'
 BOOLEAN_METRICS_CRAN = str(path) + '/src/data/boolean.metrics.cran'
@@ -202,12 +204,12 @@ if __name__ == "__main__":
     # VECTOR SPACE MODEL EVALUATOR
     vsm_cran_evaluator = Evaluator(
         cranfield_documents, cranfield_queries, cranfield_relations, vector_space_model_cranfield)
+
     try:
         vsm_cran_metrics = load_model(VSM_CRAN_METRICS)
     except OSError:
         vsm_cran_metrics = vsm_cran_evaluator.evaluate()
         save_model(vsm_cran_metrics, VSM_CRAN_METRICS)
-
 
 # ---------------------------------------------------------------------------------------
     # VECTOR SPACE MODEL with MED collection
