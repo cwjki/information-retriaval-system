@@ -1,4 +1,3 @@
-import imp
 from typing import Counter, List
 from ..preprocess_document import preproccess_document
 from .inverted_index import InvertedIndex
