@@ -1,6 +1,6 @@
 from typing import Dict, List
 from .dataset import Dataset
-from .preprocess_document import preprocces_document
+from ..preprocess_document import preproccess_document
 
 
 class InvertedIndex:
@@ -14,7 +14,7 @@ class InvertedIndex:
             self.analize_document(document_index, document.text)
 
     def analize_document(self, document_index: int, document: str):
-        terms: List[str] = preprocces_document(document)
+        terms: List[str] = preproccess_document(document)
         max_frequency = 0
         for term in terms:
             frequency = self.update_frequency(document_index, term)

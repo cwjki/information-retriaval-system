@@ -1,5 +1,6 @@
+import imp
 from typing import Counter, List
-from .preprocess_document import preprocces_document
+from ..preprocess_document import preproccess_document
 from .inverted_index import InvertedIndex
 from .dataset import Dataset
 from math import log10, sqrt
@@ -40,11 +41,11 @@ class VectorSpaceModel:
 
     def generate_document_vector(self, document_index: int):
         document = self.dataset[document_index]
-        terms = preprocces_document(document.text)
+        terms = preproccess_document(document.text)
         return {term: self.compute_wight(document_index, term) for term in terms}
 
     def generate_query_vector(self, query: str):
-        terms = preprocces_document(query)
+        terms = preproccess_document(query)
         terms = self.index.remove_non_indexed_terms(terms)
         query_frequency = Counter(terms)
         max_frequecy = max(query_frequency.values()) if len(

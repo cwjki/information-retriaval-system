@@ -1,10 +1,8 @@
-from operator import itemgetter
 import re
-from nltk.corpus import stopwords
-from nltk.stem import PorterStemmer
-from nltk.tokenize import wordpunct_tokenize
-from gensim import corpora, models, similarities
 import numpy as np
+from operator import itemgetter
+from gensim import corpora, models, similarities
+from ..preprocess_document import preproccess_document
 
 
 class IRSystem():
@@ -23,17 +21,8 @@ class IRSystem():
             loaded_corpus, num_features=len(dictionary))
         return model, index, dictionary
 
-    def preprocess_document(self, document):
-        stopset = set(stopwords.words())
-        stemmer = PorterStemmer()
-        tokens = wordpunct_tokenize(document)
-        clean = [token.lower() for token in tokens if token.lower()
-                 not in stopset and len(token) > 2]
-        final = [stemmer.stem(word) for word in clean]
-        return final
-
     def create_dictionary(self, documents):
-        pdocs = [self.preprocess_document(doc) for doc in documents]
+        pdocs = [preproccess_document(doc) for doc in documents]
         dictionary = corpora.Dictionary(pdocs)
         dictionary.save('src/data/vsm.dict')
         return dictionary, pdocs
@@ -61,7 +50,7 @@ class IRSystem():
         return result
 
     def create_query_vector(self, query, dictionary: corpora.Dictionary):
-        pquery = self.preprocess_document(query)
+        pquery = preproccess_document(query)
         vquery = dictionary.doc2bow(pquery)
         return vquery
 
@@ -174,7 +163,7 @@ class IR_Boolean():
 
     def document_matches(self, corpus, query):
         _, pdocs = self.preprocess_corpus(corpus)
-        vquery = self.preprocess_document(query)
+        vquery = preproccess_document(query)
         dict_matches = dict((doc, 0) for doc in corpus)
         doc_number = 0
         for doc in pdocs:
