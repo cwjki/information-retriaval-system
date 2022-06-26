@@ -2,11 +2,11 @@ from pathlib import Path
 from flask import Flask, request, render_template
 from flask_bootstrap import Bootstrap
 from src.metrics_evaluator import Evaluator
-from src.vsm_cranfield.vector_space_model import VectorSpaceModel
-from src.vsm_cranfield.cranfield_parser import CranfieldParser
+from src.vsm.vector_space_model import VectorSpaceModel
+from src.vsm.cranfield_parser import CranfieldParser
 from src.utils import save_model, load_model
-from src.irs_med.models import IR_LEM, IR_TF, IR_Boolean, IR_TF_IDF
-from src.irs_med.med_parser import med_parse_collection, med_parse_rel
+from src.others_irs.models import IR_LEM, IR_TF, IR_Boolean, IR_TF_IDF
+from src.others_irs.med_parser import med_parse_collection, med_parse_rel
 
 
 path = Path(__file__).parent

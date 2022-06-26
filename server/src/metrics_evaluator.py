@@ -1,6 +1,6 @@
 from typing import List, Set
 
-from .vsm_cranfield.vector_space_model import VectorSpaceModel
+from .vsm.vector_space_model import VectorSpaceModel
 
 
 class Evaluator():

@@ -56,8 +56,8 @@ class IRSystem():
 
         result = []
         for doc, score in ranking[:ranking_count]:
-            new_score = "%.3f" % round(score, 3)
-            result.append((new_score, corpus[doc], doc))
+            if score > 0.125:
+                result.append((score, corpus[doc], doc))
         return result
 
     def create_query_vector(self, query, dictionary: corpora.Dictionary):
