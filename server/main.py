@@ -82,7 +82,8 @@ def evaluate():
                                     tf_metrics_med,
                                     tf_idf_metrics_cran,
                                     tf_idf_metrics_med,
-                                    lem_metrics])
+                                    lem_metrics_cran,
+                                    lem_metrics_med])
 
 
 @app.route("/boolean-cran", methods=['GET', 'POST'])
