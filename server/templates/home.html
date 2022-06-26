@@ -73,9 +73,8 @@
         </div>
 
         <div class="list-group">
-            <a href="/tf-idf" class="list-group-item list-group-item-info active">
-                <h4 class="list-group-item-heading">Modelo TF-IDF</h4>
-                <p class="list-group-item-text"> - utiliza la colección MED</p>
+            <a href="/tf-idf-cran" class="list-group-item list-group-item-info active">
+                <h4 class="list-group-item-heading">Modelo TF-IDF <small>Cranfield</small></h4>
                 <p class="list-group-item-text"> - la implementación se apoya en la biblioteca gensim (gensim.models.tfidfmodel.TfidfModel)</p>
                 <p class="list-group-item-text"> - este modelo se basa en la frecuencia de término y la frecuencia de documento inversa para clasificar la relevancia de un documento dada una consulta del usuario </p>
                 <p class="list-group-item-text"> - link de referencia: https://radimrehurek.com/gensim/models/tfidfmodel.html</p>
@@ -85,9 +84,32 @@
         </div>
 
         <div class="list-group">
-            <a href="/lem" class="list-group-item list-group-item-danger active">
-                <h4 class="list-group-item-heading">Modelo LogEntropy</h4>
-                <p class="list-group-item-text"> - utiliza la colección MED</p>
+            <a href="/tf-idf-med" class="list-group-item list-group-item-info active">
+                <h4 class="list-group-item-heading">Modelo TF-IDF <small>Med</small></h4>
+                <p class="list-group-item-text"> - la implementación se apoya en la biblioteca gensim (gensim.models.tfidfmodel.TfidfModel)</p>
+                <p class="list-group-item-text"> - este modelo se basa en la frecuencia de término y la frecuencia de documento inversa para clasificar la relevancia de un documento dada una consulta del usuario </p>
+                <p class="list-group-item-text"> - link de referencia: https://radimrehurek.com/gensim/models/tfidfmodel.html</p>
+                <p class="list-group-item-text"> - correspondencia parcial entre documentos y consulta: Sí</p>
+                <p class="list-group-item-text"> - ranking de documentos recuperados: Sí</p>
+            </a>
+        </div>
+
+
+        <div class="list-group">
+            <a href="/lem-cran" class="list-group-item list-group-item-danger active">
+                <h4 class="list-group-item-heading">Modelo LogEntropy <small>Cranfield</small></h4>
+                <p class="list-group-item-text"> - la implementación se apoya en la biblioteca gensim (gensim.models.logentropy_model.LogEntropyModel)</p> 
+                <p class="list-group-item-text"> - el modelo Log Entropy produce una representación de frecuencias de términos logarítmicas ponderada por entropía.
+                                                   El estudio empírico de Lee et al. 2015 1 sugiere que el modelo ponderado por entropía logarítmica produce mejores resultados que otras formas de representación.</p>
+                <p class="list-group-item-text"> - link de referencia: https://radimrehurek.com/gensim/models/logentropy_model.html</p>
+                <p class="list-group-item-text"> - correspondencia parcial entre documentos y consulta: Sí</p>
+                <p class="list-group-item-text"> - ranking de documentos recuperados: Sí</p>
+            </a>
+        </div>
+
+        <div class="list-group">
+            <a href="/lem-med" class="list-group-item list-group-item-danger active">
+                <h4 class="list-group-item-heading">Modelo LogEntropy <small>Med</small></h4>
                 <p class="list-group-item-text"> - la implementación se apoya en la biblioteca gensim (gensim.models.logentropy_model.LogEntropyModel)</p> 
                 <p class="list-group-item-text"> - el modelo Log Entropy produce una representación de frecuencias de términos logarítmicas ponderada por entropía.
                                                    El estudio empírico de Lee et al. 2015 1 sugiere que el modelo ponderado por entropía logarítmica produce mejores resultados que otras formas de representación.</p>

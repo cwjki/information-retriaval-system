@@ -33,9 +33,11 @@ TF_METRICS_MED = str(path) + '/src/data/tf.metrics.med'
 TF_METRICS_CRAN = str(path) + '/src/data/tf.metrics.cran'
 
 
-TF_IDF_METRICS = str(path) + '/src/data/tf_idf.metrics'
+TF_IDF_METRICS_MED = str(path) + '/src/data/tf_idf.metrics.med'
+TF_IDF_METRICS_CRAN = str(path) + '/src/data/tf_idf.metrics.cran'
 
-LEM_METRICS = str(path) + '/src/data/lem.metrics'
+LEM_METRICS_MED = str(path) + '/src/data/lem.metrics.med'
+LEM_METRICS_CRAN = str(path) + '/src/data/lem.metrics.cran'
 
 
 app = Flask(__name__)
@@ -78,7 +80,8 @@ def evaluate():
                                     boolean_metrics_med,
                                     tf_metrics_cran,
                                     tf_metrics_med,
-                                    tf_idf_metrics,
+                                    tf_idf_metrics_cran,
+                                    tf_idf_metrics_med,
                                     lem_metrics])
 
 
@@ -89,7 +92,6 @@ def boolean_cran():
         ranking = boolean_model_cran.compute_ranking(query)
         count = len(ranking)
         return render_template('boolean_results.html', content=[query, ranking, count])
-
     else:
         return render_template('index.html')
 
@@ -101,7 +103,6 @@ def boolean_med():
         ranking = boolean_model_med.compute_ranking(query)
         count = len(ranking)
         return render_template('boolean_results.html', content=[query, ranking, count])
-
     else:
         return render_template('index.html')
 
@@ -128,26 +129,46 @@ def tf_med():
         return render_template('index.html')
 
 
-@app.route("/tf-idf", methods=['GET', 'POST'])
-def tf_idf():
+@app.route("/tf-idf-cran", methods=['GET', 'POST'])
+def tf_idf_cran():
     if request.method == 'POST':
         query = request.form['query']
-        ranking = tf_idf_model.compute_ranking(query)
+        ranking = tf_idf_model_cran.compute_ranking(query)
         count = len(ranking)
         return render_template('tf_idf_results.html', content=[query, ranking, count])
-
     else:
         return render_template('index.html')
 
 
-@app.route("/lem", methods=['GET', 'POST'])
-def lem():
+@app.route("/tf-idf-med", methods=['GET', 'POST'])
+def tf_idf_med():
     if request.method == 'POST':
         query = request.form['query']
-        ranking = lem_model.compute_ranking(query)
+        ranking = tf_idf_model_med.compute_ranking(query)
         count = len(ranking)
         return render_template('tf_idf_results.html', content=[query, ranking, count])
+    else:
+        return render_template('index.html')
 
+
+@app.route("/lem-cran", methods=['GET', 'POST'])
+def lem_cran():
+    if request.method == 'POST':
+        query = request.form['query']
+        ranking = lem_model_cran.compute_ranking(query)
+        count = len(ranking)
+        return render_template('tf_idf_results.html', content=[query, ranking, count])
+    else:
+        return render_template('index.html')
+
+
+@app.route("/lem-med", methods=['GET', 'POST'])
+def lem_med():
+    if request.method == 'POST':
+        query = request.form['query']
+        ranking = lem_model_med.compute_ranking(query)
+        count = len(ranking)
+        return render_template('tf_idf_results.html', content=[query, ranking, count])
     else:
         return render_template('index.html')
 
@@ -259,29 +280,54 @@ if __name__ == "__main__":
 
 # ---------------------------------------------------------------------------------------
     # TF IDF MODEL with CRANFIELD
-    tf_idf_model = IR_TF_IDF(corpus_med)
+    tf_idf_model_cran = IR_TF_IDF(corpus_cranfield)
 
     # TF IDF MODEL EVALUATOR
-    tf_idf_evaluator = Evaluator(
-        corpus_med, queries_med, relations_med, tf_idf_model)
+    tf_idf_evaluator_cran = Evaluator(
+        corpus_cranfield, cranfield_queries, cranfield_relations, tf_idf_model_cran)
     try:
-        tf_idf_metrics = load_model(TF_IDF_METRICS)
+        tf_idf_metrics_cran = load_model(TF_IDF_METRICS_CRAN)
     except OSError:
-        tf_idf_metrics = tf_idf_evaluator.evaluate()
-        save_model(tf_idf_metrics, TF_IDF_METRICS)
-
+        tf_idf_metrics_cran = tf_idf_evaluator_cran.evaluate()
+        save_model(tf_idf_metrics_cran, TF_IDF_METRICS_CRAN)
 
 # ---------------------------------------------------------------------------------------
-    # LEM MODEL
-    lem_model = IR_LEM(corpus_med)
+    # TF IDF MODEL with MED
+    tf_idf_model_med = IR_TF_IDF(corpus_med)
+
+    # TF IDF MODEL EVALUATOR
+    tf_idf_evaluator_med = Evaluator(
+        corpus_med, queries_med, relations_med, tf_idf_model_med)
+    try:
+        tf_idf_metrics_med = load_model(TF_IDF_METRICS_MED)
+    except OSError:
+        tf_idf_metrics_med = tf_idf_evaluator_med.evaluate()
+        save_model(tf_idf_metrics_med, TF_IDF_METRICS_MED)
+
+# ---------------------------------------------------------------------------------------
+    # LEM MODEL with CRANFIELD
+    lem_model_cran = IR_LEM(corpus_cranfield)
 
     # LDA MODEL EVALUATOR
-    lem_evaluator = Evaluator(
-        corpus_med, queries_med, relations_med, lem_model)
+    lem_evaluator_cran = Evaluator(
+        corpus_cranfield, cranfield_queries, cranfield_relations, lem_model_cran)
     try:
-        lem_metrics = load_model(LEM_METRICS)
+        lem_metrics_cran = load_model(LEM_METRICS_CRAN)
     except OSError:
-        lem_metrics = lem_evaluator.evaluate()
-        save_model(lem_metrics, LEM_METRICS)
+        lem_metrics_cran = lem_evaluator_cran.evaluate()
+        save_model(lem_metrics_cran, LEM_METRICS_CRAN)
+
+# ---------------------------------------------------------------------------------------
+    # LEM MODEL with MED
+    lem_model_med = IR_LEM(corpus_med)
+
+    # LDA MODEL EVALUATOR
+    lem_evaluator_med = Evaluator(
+        corpus_med, queries_med, relations_med, lem_model_med)
+    try:
+        lem_metrics_med = load_model(LEM_METRICS_MED)
+    except OSError:
+        lem_metrics_med = lem_evaluator_med.evaluate()
+        save_model(lem_metrics_med, LEM_METRICS_MED)
 
     app.run(debug=True)
