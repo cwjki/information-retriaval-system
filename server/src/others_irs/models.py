@@ -117,6 +117,7 @@ class IR_Boolean():
         self.corpus = corpus
         self.queries = queries
         self.ranking_query = dict()
+        self.pdocs = self.compute_document_vector(corpus)
 
     def get_ranking_index(self, query: str, ranking_count=20):
         ranking = self.compute_ranking(query, ranking_count)
@@ -162,7 +163,7 @@ class IR_Boolean():
         return dict_matches
 
     def document_matches(self, corpus, query):
-        _, pdocs = self.preprocess_corpus(corpus)
+        pdocs = self.pdocs
         vquery = preproccess_document(query)
         dict_matches = dict((doc, 0) for doc in corpus)
         doc_number = 0
@@ -172,10 +173,6 @@ class IR_Boolean():
                 dict_matches[corpus[doc_number]] = 1
             doc_number += 1
         return dict_matches
-
-    def preprocess_corpus(self, corpus):
-        dictionary, pdocs = self.create_dictionary(corpus)
-        return dictionary, pdocs
 
     def print_result(self, dict_matches: dict):
         for keys, values in dict_matches.items():
@@ -193,3 +190,17 @@ class IR_Boolean():
                 ranking.append((value, key, doc_number))
                 count -= 1
         return ranking
+
+    def compute_document_vector(self, corpus):
+        _, pdocs = self.preprocess_corpus(corpus)
+        return pdocs
+
+    def preprocess_corpus(self, corpus):
+        dictionary, pdocs = self.create_dictionary(corpus)
+        return dictionary, pdocs
+
+    def create_dictionary(self, documents):
+        pdocs = [preproccess_document(doc) for doc in documents]
+        dictionary = corpora.Dictionary(pdocs)
+        dictionary.save('src/data/vsm.dict')
+        return dictionary, pdocs

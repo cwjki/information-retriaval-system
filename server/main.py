@@ -27,7 +27,10 @@ VSM_CRAN_METRICS = str(path) + '/src/data/vsm.metrics.cran'
 VSM_MED_DIR = str(path) + '/src/data/vsm.vsm.med'
 VSM_MED_METRICS = str(path) + '/src/data/vsm.metrics.med'
 
+BOOLEAN_MODEL_CRAN = str(path) + '/src/data/boolean.model.cran'
 BOOLEAN_METRICS_MED = str(path) + '/src/data/boolean.metrics.med'
+
+BOOLEAN_MODEL_MED = str(path) + '/src/data/boolean.model.med'
 BOOLEAN_METRICS_CRAN = str(path) + '/src/data/boolean.metrics.cran'
 
 TF_MODEL_CRAN = str(path) + '/src/data/tf.model.cran'
@@ -237,7 +240,11 @@ if __name__ == "__main__":
 
 # ---------------------------------------------------------------------------------------
     # BOOLEAN MODEL with CRANFIELD
-    boolean_model_cran = IR_Boolean(corpus_cranfield)
+    try:
+        boolean_model_cran = load_model(BOOLEAN_MODEL_CRAN)
+    except OSError:
+        boolean_model_cran = IR_Boolean(corpus_cranfield)
+        save_model(boolean_model_cran, BOOLEAN_MODEL_CRAN)
 
     # BOOLEAN MODEL EVALUATOR
     boolean_evaluator_cran = Evaluator(
@@ -250,7 +257,11 @@ if __name__ == "__main__":
 
 # ---------------------------------------------------------------------------------------
     # BOOLEAN MODEL with MED
-    boolean_model_med = IR_Boolean(corpus_med)
+    try:
+        boolean_model_med = load_model(BOOLEAN_MODEL_MED)
+    except OSError:
+        boolean_model_med = IR_Boolean(corpus_med)
+        save_model(boolean_model_med, BOOLEAN_MODEL_MED)
 
     # BOOLEAN MODEL EVALUATOR
     boolean_evaluator_med = Evaluator(

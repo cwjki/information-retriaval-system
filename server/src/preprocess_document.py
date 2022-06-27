@@ -12,28 +12,29 @@ POS_TRANSFORM = {
     'R': wordnet.ADV
 }
 
+# STEMMING
+# def preproccess_document(document) -> List[str]:
+#     stopset = set(stopwords.words())
+#     stemmer = PorterStemmer()
+#     tokens = wordpunct_tokenize(document)
+#     clean = [token.lower() for token in tokens if token.lower()
+#              not in stopset and len(token) > 2]
+#     final = [stemmer.stem(word) for word in clean]
+#     return final
 
-def preproccess_document(document) -> List[str]:
-    stopset = set(stopwords.words())
-    stemmer = PorterStemmer()
-    tokens = wordpunct_tokenize(document)
-    clean = [token.lower() for token in tokens if token.lower()
-             not in stopset and len(token) > 2]
-    final = [stemmer.stem(word) for word in clean]
-    return final
 
-
-# def preproccess_document(document: str) -> List[str]:
-#     # lemmatize terms
-#     terms = word_tokenize(document, language='english')
-#     terms_lemmatized = lemmatize(terms)
-#     # remove stopswords
-#     remove_term = set(stopwords.words())
-#     terms_without_stopwords = [
-#         term for term in terms_lemmatized if not term in remove_term]
-#     # remove punctuation
-#     terms = [term for term in terms_without_stopwords if not term in punctuation]
-#     return terms
+# LEMMATIZATION
+def preproccess_document(document: str) -> List[str]:
+    # lemmatize terms
+    terms = word_tokenize(document, language='english')
+    terms_lemmatized = lemmatize(terms)
+    # remove stopswords
+    remove_term = set(stopwords.words())
+    terms_without_stopwords = [
+        term for term in terms_lemmatized if not term in remove_term]
+    # remove punctuation
+    terms = [term for term in terms_without_stopwords if not term in punctuation]
+    return terms
 
 
 def lemmatize(terms: List[str]) -> List[str]:
